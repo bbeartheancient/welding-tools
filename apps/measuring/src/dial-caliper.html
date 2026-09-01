@@ -1,0 +1,549 @@
+<!doctype html>
+<html>
+<head>
+    
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta charset="UTF-8">
+    <title>The Dial Caliper Game - Learn and Practice Reading a Dial Caliper</title>
+	
+<meta name="description" content="With our intuitive dial caliper game, you can quickly become a dial caliper master. Inch and cm versions.">
+<meta property="og:title" content="The Dial Caliper Game - Learn and Practice Reading a Dial Caliper">
+<meta property="og:description" content="With our intuitive dial caliper game, you can quickly become a dial caliper master. Inch and cm versions.">
+<meta property="og:image" content="https://www.rulergame.net/images/og-dial-caliper-game.png">
+<meta property="og:url" content="https://www.rulergame.net/dial-caliper-game.php">
+<meta property="og:type" content="website" />
+<link rel="canonical" href="https://www.rulergame.net/dial-caliper-game.php" />
+	
+    
+    <link rel="stylesheet" href="https://www.rulergame.net/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://www.rulergame.net/assets/css/site.css">
+    <link rel="stylesheet" href="https://www.rulergame.net/assets/css/animate.min.css">
+    <link rel="stylesheet" href="https://www.rulergame.net/dial-caliper/css/dial_caliper.css">
+    <!-- <link rel="stylesheet" href="css/w3.css"> -->
+    
+    <script src="https://www.rulergame.net/assets/js/html2canvas.min.js"></script>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XE0GQQH6FP"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-XE0GQQH6FP');
+</script>
+<!-- AdThrive Head Tag Manual -->
+<script data-no-optimize="1" data-cfasync="false">
+(function(w, d) {
+	w.adthrive = w.adthrive || {};
+	w.adthrive.cmd = w.
+	adthrive.cmd || [];
+	w.adthrive.plugin = 'adthrive-ads-manual';
+	w.adthrive.host = 'ads.adthrive.com';var s = d.createElement('script');
+	s.async = true;
+	s.referrerpolicy='no-referrer-when-downgrade';
+	s.src = 'https://' + w.adthrive.host + '/sites/6441cbd48ef14750ba9ecca1/ads.min.js?referrer=' + w.encodeURIComponent(w.location.href) + '&cb=' + (Math.floor(Math.random() * 100) + 1);
+	var n = d.getElementsByTagName('script')[0];
+	n.parentNode.insertBefore(s, n);
+})(window, document);
+</script>
+<!-- End of AdThrive Head Tag -->
+
+</head>
+<body>
+<!-- Navbar -->
+<div class="z100">
+    <div class="w3-bar site-header w3-card w3-left-align w3-large" id="TopNavBar">
+        <span id="Menumenu"><a class="w3-bar-item w3-button w3-padding site-header-menu-button" href="javascript:void(0);" onclick="toggleNavMenu()" title="Toggle Navigation Menu">Menu</a></span>
+        <span id="topBanner"><a href="https://www.rulergame.net"><img src="https://www.rulergame.net/images/rulergame.png" id="topBannerImage" alt="The Ruler Game - Learn to read a ruler"></a></span>
+		<span id="topmenuright">Teacher: <a href="https://www.rulergame.net/account/login">Log In</a> / <a href="https://www.rulergame.net/account/register">Sign Up</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://www.rulergame.net/classid.php" class="joinclass">Join a Class</a></span>
+    </div>
+    <div id="NavMenu" class="w3-dropdown-content w3-bar-block w3-border w3-large rulergame-dark-green z100">
+	<a href="https://www.rulergame.net" class="w3-bar-item w3-button w3-padding-large">Home</a>
+	<a href="https://www.rulergame.net/classid.php" class="w3-bar-item w3-button w3-padding-large" style="background-color:#0a85bd; border-radius:10px; max-width:300px;">Student, Join a Class</a>
+        <a href="javascript:void(0);" class="w3-bar-item w3-button w3-padding-large submenu-toggle" onclick="toggleCategory('measuringGames')">Basic Measurement Games</a>
+        <div id="measuringGames" class="w3-hide w3-bar-block rulergame-submenu">
+            <a href="https://www.rulergame.net/new-english-ruler-game.php" class="w3-bar-item w3-button w3-padding-large">New Inch Ruler Game</a>
+            <a href="https://www.rulergame.net/new-metric-ruler-game.php" class="w3-bar-item w3-button w3-padding-large">New Metric Ruler Game</a>
+			<a href="https://www.rulergame.net/v2-standard-english-ruler-game.php" class="w3-bar-item w3-button w3-padding-large">Old Inch Ruler Game</a>
+			<a href="https://www.rulergame.net/v2-metric-ruler-game.php" class="w3-bar-item w3-button w3-padding-large">Old Metric Ruler Game</a>
+			<a href="https://www.rulergame.net/thermometer-game.php" class="w3-bar-item w3-button w3-padding-large">Thermometer Reading Game</a>
+            <a href="https://www.rulergame.net/temperature-conversion-game.php" class="w3-bar-item w3-button w3-padding-large">Temperature Conversion Game</a>
+        </div>
+		<a href="javascript:void(0);" class="w3-bar-item w3-button w3-padding-large submenu-toggle" onclick="toggleCategory('PrecisionGames')">Precision Measurement</a>
+        <div id="PrecisionGames" class="w3-hide w3-bar-block rulergame-submenu">
+		    <a href="https://www.rulergame.net/depth-micrometer-game.php" class="w3-bar-item w3-button w3-padding-large">Depth Micrometer Game</a>
+			<a href="https://www.rulergame.net/dial-caliper-game.php" class="w3-bar-item w3-button w3-padding-large">Dial Caliper Game</a>
+			<a href="https://www.rulergame.net/dial-indicator-game.php" class="w3-bar-item w3-button w3-padding-large">Dual Dial Indicator Game</a>
+            <a href="https://www.rulergame.net/micrometer-game.php" class="w3-bar-item w3-button w3-padding-large">Micrometer Game</a>
+			<a href="https://www.rulergame.net/pressure-gauge-game.php" class="w3-bar-item w3-button w3-padding-large">Pressure Gauge Game</a>
+			<a href="https://www.rulergame.net/vernier-caliper-game.php" class="w3-bar-item w3-button w3-padding-large">Vernier Caliper Game</a>
+        </div>
+		<a href="javascript:void(0);" class="w3-bar-item w3-button w3-padding-large submenu-toggle" onclick="toggleCategory('VocationalGames')">Vocational & Trade Tools</a>
+        <div id="VocationalGames" class="w3-hide w3-bar-block rulergame-submenu">
+			<a href="https://www.rulergame.net/architectural-scale-game.php" class="w3-bar-item w3-button w3-padding-large">Architectural Scale Game</a>
+			<a href="https://www.rulergame.net/cooking-conversions-game.php" class="w3-bar-item w3-button w3-padding-large">Cooking Conversions Game</a>
+			<a href="https://www.rulergame.net/grade-rod-game.php" class="w3-bar-item w3-button w3-padding-large">Grade Rod Game</a>
+			<a href="https://www.rulergame.net/machinist-ruler-game.php" class="w3-bar-item w3-button w3-padding-large">Machinist Ruler Game</a>
+			<a href="https://www.rulergame.net/pica-ruler-game.php" class="w3-bar-item w3-button w3-padding-large">Pica Ruler Game</a>
+			<a href="https://www.rulergame.net/seam-gauge-game.php" class="w3-bar-item w3-button w3-padding-large">Seam Gauge Game</a>
+        </div>
+        <a href="javascript:void(0);" class="w3-bar-item w3-button w3-padding-large submenu-toggle" onclick="toggleCategory('MathGames')">Math Games</a>
+        <div id="MathGames" class="w3-hide w3-bar-block rulergame-submenu">
+		    <a href="https://www.rulergame.net/math-game.php" class="w3-bar-item w3-button w3-padding-large">Math Game Builder</a>
+			<a href="https://www.rulergame.net/protractor-game.php" class="w3-bar-item w3-button w3-padding-large">Protractor Game</a>
+        </div>
+        <a href="javascript:void(0);" class="w3-bar-item w3-button w3-padding-large submenu-toggle" onclick="toggleCategory('moneyGames')">Time & Money Games</a>
+        <div id="moneyGames" class="w3-hide w3-bar-block rulergame-submenu">
+            <a href="https://www.rulergame.net/clock-game.php" class="w3-bar-item w3-button w3-padding-large">Clock Game</a>
+            <a href="https://www.rulergame.net/military-time-game.php" class="w3-bar-item w3-button w3-padding-large">Military Time Game</a>
+            <a href="https://www.rulergame.net/change-counting-game.php" class="w3-bar-item w3-button w3-padding-large">Change Counting Game</a>
+            <a href="https://www.rulergame.net/money-game.php" class="w3-bar-item w3-button w3-padding-large">Money Counting Game</a>
+            <a href="https://www.rulergame.net/shopping-money-counting-game.php" class="w3-bar-item w3-button w3-padding-large">Shopping Money Counting Game</a>
+        </div>
+		<a href="javascript:void(0);" class="w3-bar-item w3-button w3-padding-large submenu-toggle" onclick="toggleCategory('HealthGames')">Health & Science Games</a>
+        <div id="HealthGames" class="w3-hide w3-bar-block rulergame-submenu">
+			<a href="https://www.rulergame.net/blood-pressure-game.php" class="w3-bar-item w3-button w3-padding-large">Blood Pressure Game</a>
+			<a href="https://www.rulergame.net/graduated-cylinder-game.php" class="w3-bar-item w3-button w3-padding-large">Graduated Cylinder Game</a>
+			<a href="https://www.rulergame.net/physician-scale-game.php" class="w3-bar-item w3-button w3-padding-large">Physician Scale Game</a>
+			<a href="https://www.rulergame.net/stadiometer-game.php" class="w3-bar-item w3-button w3-padding-large">Stadiometer Game</a>
+			<a href="https://www.rulergame.net/triple-beam-balance-game.php" class="w3-bar-item w3-button w3-padding-large">Triple Beam Balance Game</a>
+        </div>
+	<a href="https://www.rulergame.net/brain-games.php" class="w3-bar-item w3-button w3-padding-large submenu-toggle">Brain Games</a>
+	<a href="https://www.rulergame.net/account/login" class="w3-bar-item w3-button w3-padding-large" style="background-color:#0a85bd; border-radius:10px; max-width:300px;">Teacher, Log In</a>
+	<a href="https://www.rulergame.net/account/register" class="w3-bar-item w3-button w3-padding-large" style="background-color:#0a85bd; border-radius:10px; max-width:300px;">Teacher, Sign Up</a>
+    </div>
+</div>
+
+<div class="raptive-header-place-nocls"></div>
+
+<div id="mainBodyContent" class="w3-container w3-margin-top">
+    <div id="screenArea">
+        <div class="container-fluid setting-section">
+      
+      
+        <div class="vertical-center">
+            <!-- <button class="btn btn-game-start" id= "btnStart">
+            Play Game
+            </button> -->
+            <div id="buttonBar" >
+            <button id="btnStart">Play Game</button>
+            <button id="btnSettings">Settings</button>
+            <button id="btnWrongAnswers" style="display: none;">Wrong Answers</button>
+            </div>
+        </div>
+      
+        
+        <div id="questionBar">
+            <div id="txtQuestion"><span>&nbsp;</span></div>
+        </div>
+  
+        <div id="preferencesBox" class="w3-card w3-pale-yellow w3-border w3-border-yellow">
+            <span onclick="$('#preferencesBox').slideToggle();" class="w3-button w3-display-topright">X</span>
+            <header class="w3-container w3-yellow">
+            <h5>Settings</h5>
+            </header>
+            <div class="w3-padding-small">
+            <div id="timerBox" class="w3-row">
+                <div class="w3-col s6 w3-right-align rulergame-align-vert"><strong>Timer:&nbsp;</strong></div>
+                <div class="w3-col s6">
+                    <select id="stgTimer" class="w3-select w3-border" >
+                        <option value="On" selected>On</option>
+                        <option value="Off">Off</option>
+                    </select>  
+                </div>
+            </div>
+            <div id="soundsBox" class="w3-row">
+                <div class="w3-col s6 w3-right-align rulergame-align-vert"><strong>Sounds:&nbsp;</strong></div>
+                <div class="w3-col s6">
+                    <select id="stgSounds" class="w3-select w3-border" >
+                        <option value="On" selected>On</option>
+                        <option value="Off">Off</option>
+                    </select>  
+                </div>
+            </div>
+    
+            <div id="modeSelection" class="w3-row">
+                <div class="w3-col s6 w3-right-align rulergame-align-vert"><strong>Unit:&nbsp;</strong></div>
+                <div class="w3-col s6">
+                    <select id="stgScale" class="w3-select w3-border" >
+                        <option value="Inch" selected>Inch</option>
+                        <option value="Centimeter">Metric</option>
+                    </select>  
+                </div>
+            </div>
+
+			<div id="resolutionSelection" class="w3-row">
+                <div class="w3-col s6 w3-right-align rulergame-align-vert"><strong>Resolution:&nbsp;</strong></div>
+                <div class="w3-col s6">
+                    <select id="stgResolution" class="w3-select w3-border" >
+                        <option value="0.001 in" selected>0.001 in</option>
+                        <option value="1/8 in">1/8 in</option>
+                        <option value="1/16 in">1/16 in</option>
+                        <option value="1/32 in">1/32 in</option>
+                        <option value="1/64 in">1/64 in</option>
+                    </select>  
+                </div>
+            </div>
+            
+            <div id="modeSelection" class="w3-row">
+                <div class="w3-col s6 w3-right-align rulergame-align-vert"><strong>Mode:&nbsp;</strong></div>
+                <div class="w3-col s6">
+                    <select id="stgMode" class="w3-select w3-border" >
+                        <option value="Game" selected>Find</option>
+                        <option value="Type">Type</option>
+                        <option value="Trainer">Training</option>
+                    </select>  
+                </div>
+            </div>
+            
+            
+            
+            </div>
+            <!-- <div id="rulerLengthMessage" class="w3-row"></div> -->
+        </div>
+        
+  
+    </div>
+    <div class="canvas-area">
+
+    <div id="canvasArea">
+        <canvas id="playerCanvas"></canvas>
+        <!-- <canvas id="rulerCanvas" width="900" height="500" style="border:2px solid #000000; background-color:#fff"></canvas> -->
+        <canvas id="myCanvas" width="1000" height="410" style="border:2px solid #000000; background-color:#fff"></canvas>
+        <!-- <canvas id="myCanvas" style="border: 1px solid #c3c3c3;">
+            Your browser does not support the HTML5 canvas tag.
+        </canvas> -->
+      
+        <div id="strikeBoard"><span></span></div>
+        <div id="cheerBoard"><span></span></div>
+
+        <div id="detailedControl" class="w3-container w3-padding">
+            <div class="w3-row">
+                <div id="verniersmall" class="">
+                    <div class="w3-row number-input"> 
+                        <div id="labelverniersmall" class="w3-half"><b>Control Dial</b></div>
+                        <div class="w3-half">
+                        <button class="spinner decrement" id="btnvernierdecrement">-</button>
+                            <input id="verniersmallControl" name="sleevemain" value="00000" onchange="DrawSleeveMainChange()">
+                        <button class="spinner increment" id="btnvernierincrement">+</button> 
+                        </div>
+                    </div>          
+                </div>
+            </div>
+        </div> 
+    </div>    
+</div>
+
+<div class="typecanvs-area" style="text-align:center">
+    <canvas id="typeCanvas"></canvas>
+</div>
+<div id="resultsBar" class="w3-container">
+    <div class="w3-row">
+        <div id="submitColumn" class="w3-third w3-center"> 
+            <button id="btnSubmit">Submit Answer</button>
+			<br><br>
+        </div>
+        <div id="displayBoard" class="w3-twothird w3-center">
+            <div id="scoreColumn"><div id="txtScore"></div><div class="resultsBarLabel">SCORE</div></div>
+            <div id="timerColumn"><canvas id="timerCanvas"></canvas><div class="resultsBarLabel">TIME</div></div>
+            <div id="levelColumn"><canvas id="levelCanvas"></canvas><div class="resultsBarLabel">LEVEL</div></div>
+            <div id="strikesColumn"><div id="txtStrikes"></div><div class="resultsBarLabel">STRIKES</div></div>                
+        </div>
+    </div>
+    
+</div>
+</div>
+</div>
+    
+  
+
+
+<div id="instructionsBox" class="w3-container">
+        <h1 style="text-align:center">The Dial Caliper Game - Learn and Practice Reading a Dial Caliper</h1>
+	
+                    <h2>Instructions:</h2>
+                    <ul class="w3-ul">
+						<li>Use this game to learn and practice how to use a dial caliper.</li>
+						<li>The Game can be played either with an imperial scale (inch) or a metric scale. Numbers on the top of the scale are for centimeters and at the bottom for inches.</li>
+                        <li>This game can be played using a mouse or a touchscreen.</li>
+                        <li>Press the <em><strong>Play Game</strong></em> button to begin playing the game.</li>
+                        <li>A measurement to select will appear above the dial caliper.</li>
+                        <li>With your mouse or finger, click/tap and hold the dial and move it left or right until you have reached the correct spot.</li>
+						<li>If you are not able to hit exactly the right spot, use the minus and plus icons below the dial caliper to control the dial caliper and move it up or down by 0.001 inches or 0,01 mm with each click. You can also use your mouse wheel.</li>
+						<li>When you think you have the correct answer, click/tap the <em><strong>Submit Answer</strong></em> button below the dial caliper.</li>
+                        <li>For each correct answer, you will be awarded points. Your score is displayed on the left side of the Results Bar that appears below the dial caliper.</li>
+                        <li>Points are awarded based on the following table.
+                              <table class="w3-table w3-bordered">
+                                <tr><th>Level</th><th>Time Limit</th><th>Points</th></tr>
+                                <tr><td>1</td><td>20 seconds</td><td>10</td></tr>
+                                <tr><td>2</td><td>18 seconds</td><td>20</td></tr>
+                                <tr><td>3</td><td>16 seconds</td><td>30</td></tr>
+                                <tr><td>4</td><td>14 seconds</td><td>40</td></tr>
+                                <tr><td>5</td><td>12 seconds</td><td>50</td></tr>
+                                <tr><td>6</td><td>10 seconds</td><td>60</td></tr>
+                                <tr><td>7</td><td>8 seconds</td><td>70</td></tr>
+                                <tr><td>8</td><td>6 seconds</td><td>80</td></tr>
+                                <tr><td>9</td><td>4 seconds</td><td>90</td></tr>
+                                <tr><td>10</td><td>2 seconds</td><td>100</td></tr>
+                              </table></li>
+                        <li>Each time you correctly guess 5 measurements, you will advance to the next level. Your current level is indicated in the Results Bar below the dial caliper.</li>
+                        <li>The timer is represented to the right of the score in the Results Bar. As time passes, the bar will get shorter.</li>
+                        <li>If you have not selected the correct measurement before the time runs out, you will receive a strike. After three strikes, the game is over. The number of strikes is displayed on the right side of the Results Bar.</li>
+                        <li>Click the <em><strong>Settings</strong></em> button to adjust your preferences for the game.
+                            <ul>
+                                <li><strong>Timer:</strong> The default setting is On. Select Off to have unlimited time to submit your answer.</li>
+                                <li><strong>Sounds:</strong> The default setting is On. Select Off to mute all game sounds.</li>
+								<li><strong>Unit:</strong> Choose between inch and metric game. Default is inches.</li>
+								<li><strong>Resolution:</strong> When using inches, you can choose between 0.001-inch or 1/8, 1/16, 1/32 or 1/64-inch (fractional) resolution.</li>
+                                <li><strong>Mode:</strong> The default mode is "Find". You can also select "Type" mode, where numbers appear below the dial caliper and you can enter your answer by clicking these numbers or typing with your keyboard. For an easier experience, select "Training" mode. In this mode, the current value of the dial caliper is displayed between the plus and minus buttons.</li>
+                                <li>The current settings are always displayed in the lower-right corner of the dial caliper.</li>
+								<li>The settings you have selected are stored in your browser for the duration of your session. You can refresh your browser to start a new game, but if you close it, the settings will reset to default the next time you visit the game.</li>
+                            </ul></li>
+                    </ul>
+	
+</div>
+  
+<br>
+  
+<footer class="w3-container w3-padding rulergame-dark-green" style="margin-top:35px">  
+            <div class="w3-row-padding">
+
+              <div class="w3-third">
+                <h3>BASIC MEASUREMENT GAMES</h3>
+                <ul class="w3-ul">
+                  <li class="w3-padding-16">
+                    &#9656; <a href="https://www.rulergame.net/new-english-ruler-game.php" class="w3-text-white w3-hover-opacity w3-large rulergame-no-underline">New Inch Ruler Game</a><br>
+                  </li>
+				  <li class="w3-padding-16">
+                    &#9656; <a href="https://www.rulergame.net/new-metric-ruler-game.php" class="w3-text-white w3-hover-opacity w3-large rulergame-no-underline">New Metric Ruler Game</a><br>
+                  </li>
+                  <li class="w3-padding-16">
+                    &#9656; <a href="https://www.rulergame.net/v2-standard-english-ruler-game.php" class="w3-text-white w3-hover-opacity w3-large rulergame-no-underline">Old Inch Ruler Game</a><br>
+                  </li>
+				  <li class="w3-padding-16">
+                    &#9656; <a href="https://www.rulergame.net/v2-metric-ruler-game.php" class="w3-text-white w3-hover-opacity w3-large rulergame-no-underline">Old Metric Ruler Game</a><br>
+                  </li>
+				  <li class="w3-padding-16">
+                    &#9656; <a href="https://www.rulergame.net/thermometer-game.php" class="w3-text-white w3-hover-opacity w3-large rulergame-no-underline">Thermometer Reading Game</a><br>
+                  </li>
+				  <li class="w3-padding-16">
+                    &#9656; <a href="https://www.rulergame.net/temperature-conversion-game.php" class="w3-text-white w3-hover-opacity w3-large rulergame-no-underline">Temperature Conversion Game</a><br>
+                  </li>
+                </ul>
+				
+				<h3>PRECISION MEASUREMENT</h3>
+                <ul class="w3-ul">
+				  <li class="w3-padding-16">
+                    &#9656; <a href="https://www.rulergame.net/depth-micrometer-game.php" class="w3-text-white w3-hover-opacity w3-large rulergame-no-underline">Depth Micrometer Game</a><br>
+                  </li>
+				  <li class="w3-padding-16">
+                    &#9656; <a href="https://www.rulergame.net/dial-caliper-game.php" class="w3-text-white w3-hover-opacity w3-large rulergame-no-underline">Dial Caliper Game</a><br>
+                  </li>				  
+				  <li class="w3-padding-16">
+                    &#9656; <a href="https://www.rulergame.net/dial-indicator-game.php" class="w3-text-white w3-hover-opacity w3-large rulergame-no-underline">Dual Dial Indicator Game</a><br>
+                  </li>
+				  <li class="w3-padding-16">
+                    &#9656; <a href="https://www.rulergame.net/micrometer-game.php" class="w3-text-white w3-hover-opacity w3-large rulergame-no-underline">Micrometer Game</a><br>
+                  </li>
+				  <li class="w3-padding-16">
+                    &#9656; <a href="https://www.rulergame.net/pressure-gauge-game.php" class="w3-text-white w3-hover-opacity w3-large rulergame-no-underline">Pressure Gauge Game</a><br>
+                  </li>
+				  <li class="w3-padding-16">
+                    &#9656; <a href="https://www.rulergame.net/vernier-caliper-game.php" class="w3-text-white w3-hover-opacity w3-large rulergame-no-underline">Vernier Caliper Game</a><br>
+                  </li>
+                </ul>
+				
+                <h3>VOCATIONAL & TRADE TOOLS</h3>
+                <ul class="w3-ul">
+				  <li class="w3-padding-16">
+                    &#9656; <a href="https://www.rulergame.net/architectural-scale-game.php" class="w3-text-white w3-hover-opacity w3-large rulergame-no-underline">Architectural Scale Game</a><br>
+                  </li>
+				  <li class="w3-padding-16">
+                    &#9656; <a href="https://www.rulergame.net/cooking-conversions-game.php" class="w3-text-white w3-hover-opacity w3-large rulergame-no-underline">Cooking Conversions Game</a><br>
+                  </li>
+				  <li class="w3-padding-16">
+                    &#9656; <a href="https://www.rulergame.net/grade-rod-game.php" class="w3-text-white w3-hover-opacity w3-large rulergame-no-underline">Grade Rod Game</a><br>
+                  </li>
+				  <li class="w3-padding-16">
+                    &#9656; <a href="https://www.rulergame.net/machinist-ruler-game.php" class="w3-text-white w3-hover-opacity w3-large rulergame-no-underline">Machinist Ruler Game</a><br>
+                  </li>
+				  <li class="w3-padding-16">
+                    &#9656; <a href="https://www.rulergame.net/pica-ruler-game.php" class="w3-text-white w3-hover-opacity w3-large rulergame-no-underline">Pica Ruler Game</a><br>
+                  </li>
+				  <li class="w3-padding-16">
+                    &#9656; <a href="https://www.rulergame.net/seam-gauge-game.php" class="w3-text-white w3-hover-opacity w3-large rulergame-no-underline">Seam Gauge Game</a><br>
+                  </li>
+				</ul>
+		      </div>
+
+              <div class="w3-third">
+				<h3>MATH GAMES</h3>
+				<ul class="w3-ul">
+				  <li class="w3-padding-16">
+                    &#9656; <a href="https://www.rulergame.net/math-game.php" class="w3-text-white w3-hover-opacity w3-large rulergame-no-underline">Math Game Builder</a><br>
+                  </li>
+				  <li class="w3-padding-16">
+                    &#9656; <a href="https://www.rulergame.net/protractor-game.php" class="w3-text-white w3-hover-opacity w3-large rulergame-no-underline">Protractor Game</a><br>
+                  </li>
+                </ul>
+				
+				<h3>TIME & MONEY GAMES</h3>
+				<ul class="w3-ul">
+                  <li class="w3-padding-16">
+                    &#9656; <a href="https://www.rulergame.net/clock-game.php" class="w3-text-white w3-hover-opacity w3-large rulergame-no-underline">Clock Game</a><br>
+                  </li>
+				  <li class="w3-padding-16">
+                    &#9656; <a href="https://www.rulergame.net/military-time-game.php" class="w3-text-white w3-hover-opacity w3-large rulergame-no-underline">Military Time Game</a><br>
+                  </li>
+				  <li class="w3-padding-16">
+                    &#9656; <a href="https://www.rulergame.net/change-counting-game.php" class="w3-text-white w3-hover-opacity w3-large rulergame-no-underline">Change Counting Game</a><br>
+                  </li>
+				  <li class="w3-padding-16">
+                    &#9656; <a href="https://www.rulergame.net/money-game.php" class="w3-text-white w3-hover-opacity w3-large rulergame-no-underline">Money Counting Game</a><br>
+                  </li>
+				  <li class="w3-padding-16">
+                    &#9656; <a href="https://www.rulergame.net/shopping-money-counting-game.php" class="w3-text-white w3-hover-opacity w3-large rulergame-no-underline">Shopping Money Counting Game</a><br>
+                  </li>
+                </ul>
+				
+				<h3>HEALTH & SCIENCE GAMES</h3>
+				<ul class="w3-ul">
+                  <li class="w3-padding-16">
+                    &#9656; <a href="https://www.rulergame.net/blood-pressure-game.php" class="w3-text-white w3-hover-opacity w3-large rulergame-no-underline">Blood Pressure Game</a><br>
+                  </li>
+				  <li class="w3-padding-16">
+                    &#9656; <a href="https://www.rulergame.net/graduated-cylinder-game.php" class="w3-text-white w3-hover-opacity w3-large rulergame-no-underline">Graduated Cylinder Game</a><br>
+                  </li>
+				  <li class="w3-padding-16">
+                    &#9656; <a href="https://www.rulergame.net/physician-scale-game.php" class="w3-text-white w3-hover-opacity w3-large rulergame-no-underline">Physician Scale Game</a><br>
+                  </li>
+				  <li class="w3-padding-16">
+                    &#9656; <a href="https://www.rulergame.net/stadiometer-game.php" class="w3-text-white w3-hover-opacity w3-large rulergame-no-underline">Stadiometer Game</a><br>
+                  </li>
+				  <li class="w3-padding-16">
+                    &#9656; <a href="https://www.rulergame.net/triple-beam-balance-game.php" class="w3-text-white w3-hover-opacity w3-large rulergame-no-underline">Triple Beam Balance Game</a><br>
+                  </li>
+                </ul>
+				
+				<h3>BRAIN GAMES</h3>
+				<ul class="w3-ul">
+                  <li class="w3-padding-16">
+                    &#9656; <a href="https://www.rulergame.net/brain-games.php" class="w3-text-white w3-hover-opacity w3-large rulergame-no-underline">All Brain Games</a><br>
+                  </li>
+                </ul>
+				
+              </div>
+
+              <div class="w3-third">
+                <h3>CONTACT ME</h3>
+                  <p class="w3-xxlarge w3-margin-top w3-margin-bottom">
+                    <a href="https://www.rulergame.net/privacy-policy.php#contact" class="w3-text-white w3-hover-opacity"><img src="https://www.rulergame.net/contact-button.png" alt="Contact button"></a>
+                    <a href="https://www.facebook.com/RulerGame/" class="w3-text-white w3-hover-opacity" target="_blank"><img src="https://www.rulergame.net/facebook-button.png" alt="Facebook button"></a>
+                  </p>                   
+                  <p>Spears Technologies, Inc.<br>
+                    Attn: The Ruler Game<br>
+                    576 N. Birdneck Rd. #178<br>
+                    Virginia Beach, VA 23451</p>
+              </div>
+
+            </div>
+<div class="rulergame-dark-green w3-center w3-padding w3-border-top">Copyright &copy; 2026  by RulerGame.net and Ricky D. Spears. All Rights Reserved. <a href="https://www.rulergame.net/privacy-policy.php" class="w3-text-white w3-hover-opacity">Privacy Policy</a><br><br><br></div>
+</footer>
+
+<script>
+    function toggleNavMenu() {
+        var x = document.getElementById("NavMenu");
+        if (x.className.indexOf("w3-show") == -1) {  
+            x.className += " w3-show";
+        } else { 
+            x.className = x.className.replace(" w3-show", "");
+        }
+    }
+
+    function toggleCategory(categoryId) {
+        document.getElementById(categoryId).classList.toggle("w3-show");
+    }
+</script>
+
+<script> !(function (e) { const t = '__adblocker'; if (-1 === e.cookie.indexOf(t)) { const n = new XMLHttpRequest(); (n.open('GET', 'https://ads.adthrive.com/abd/abd.js', !0), (n.onreadystatechange = function () { if (XMLHttpRequest.DONE === n.readyState) if (200 === n.status) { const t = e.createElement('script'); ((t.innerHTML = n.responseText), e.getElementsByTagName('head')[0].appendChild(t)); } else { const n = new Date(); (n.setTime(n.getTime() + 3e5), (e.cookie = t + '=true; expires=' + n.toUTCString() + '; path=/')); } }), n.send()); } })(document); </script> 
+ <script> !function(){function e(){var e=document.cookie.match("(^|[^;]+)\s*__adblocker\s*=\s*([^;]+)");return e&&e.pop()}function t(){var e=document.createElement("script");e.async=!0,e.id="Tqgkgu",e.setAttribute("data-sdk","l/1.1.15"),e.setAttribute("data-cfasync","false"),e.src="https://html-load.com/loader.min.js",e.charset="UTF-8",e.setAttribute("data","kfpvgbrkab9r4a5rkrqrkwagrw6rzrv8rxag0asrka5abaoagrxa5srxrxabasrkrvabaoaxrx0asrkabrxfaba1raa5a5asrkr9wa1agrw6rzr9rkaia8"),e.setAttribute("onload","(async()=>{let e='html-load.com';const t=window,a=document,r=e=>new Promise((t=>{const a=.1*e,r=e+Math.floor(2*Math.random()*a)-a;setTimeout(t,r)})),o=t.addEventListener.bind(t),n=t.postMessage.bind(t),s=btoa,i='message',l=location,c=Math.random;try{const t=()=>new Promise(((e,t)=>{let a=c().toString(),r=c().toString();o(i,(e=>e.data===a&&n(r,'*'))),o(i,(t=>t.data===r&&e())),n(a,'*'),setTimeout((()=>{t(Error('Timeout'))}),1231)})),a=async()=>{try{let e=!1;const a=c().toString();if(o(i,(t=>{t.data===a+'_as_res'&&(e=!0)})),n(a+'_as_req','*'),await t(),await r(500),e)return!0}catch(e){}return!1},s=[100,500,1e3];for(let o=0;o<=s.length&&!await a();o++){if(o===s.length-1)throw'Failed to load website properly since '+e+' is tainted. Please allow '+e;await r(s[o])}}catch(d){try{const e=a.querySelector('script#Tqgkgu').getAttribute('onerror');t[s(l.hostname+'_show_bfa')]=d,await new Promise(((t,r)=>{o('message',(e=>{'as_modal_loaded'===e.data&&t()})),setTimeout((()=>r(d)),3e3);const n=a.createElement('script');n.innerText=e,a.head.appendChild(n),n.remove()}))}catch(m){(t=>{const a='https://report.error-report.com/modal';try{confirm('There was a problem loading the page. Please click OK to learn more.')?l.href=a+'?url='+s(l.href)+'&error='+s(t)+'&domain='+e:l.reload()}catch(d){location.href=a+'?eventId=&error=Vml0YWwgQVBJIGJsb2NrZWQ%3D&domain='+e}})(d)}}})();"),e.setAttribute("onerror","(async()=>{const e=window,t=document;let r=JSON.parse(atob('WyJodG1sLWxvYWQuY29tIiwiZmIuaHRtbC1sb2FkLmNvbSIsImQzN2o4cGZ4dTJpb2dpLmNsb3VkZnJvbnQubmV0IiwiY29udGVudC1sb2FkZXIuY29tIiwiZmIuY29udGVudC1sb2FkZXIuY29tIl0=')),o=r[0];const a='addEventListener',n='setAttribute',s='getAttribute',i=location,l=clearInterval,c='as_retry',d=i.hostname,h=e.addEventListener.bind(e),m=btoa,u='https://report.error-report.com/modal',b=e=>{try{confirm('There was a problem loading the page. Please click OK to learn more.')?i.href=u+'?url='+m(i.href)+'&error='+m(e)+'&domain='+o:i.reload()}catch(t){location.href=u+'?eventId=&error=Vml0YWwgQVBJIGJsb2NrZWQ%3D&domain='+o}},p=async e=>{try{localStorage.setItem(i.host+'_fa_'+m('last_bfa_at'),Date.now().toString())}catch(p){}setInterval((()=>t.querySelectorAll('link,style').forEach((e=>e.remove()))),100);const r=await fetch('https://error-report.com/report?type=loader_light&url='+m(i.href)+'&error='+m(e),{method:'POST'}).then((e=>e.text())),a=new Promise((e=>{h('message',(t=>{'as_modal_loaded'===t.data&&e()}))}));let s=t.createElement('iframe');s.src=u+'?url='+m(i.href)+'&eventId='+r+'&error='+m(e)+'&domain='+o,s[n]('style','width:100vw;height:100vh;z-index:2147483647;position:fixed;left:0;top:0;');const c=e=>{'close-error-report'===e.data&&(s.remove(),removeEventListener('message',c))};h('message',c),t.body.appendChild(s);const d=setInterval((()=>{if(!t.contains(s))return l(d);(()=>{const e=s.getBoundingClientRect();return'none'!==getComputedStyle(s).display&&0!==e.width&&0!==e.height})()||(l(d),b(e))}),1e3);await new Promise(((t,r)=>{a.then(t),setTimeout((()=>r(e)),3e3)}))},f=m(d+'_show_bfa');if(e[f])p(e[f]);else try{if(void 0===e[c]&&(e[c]=0),e[c]>=r.length)throw'Failed to load website properly since '+o+' is blocked. Please allow '+o;if((()=>{const t=e=>{let t=0;for(let r=0,o=e.length;o>r;r++)t=(t<<5)-t+e.charCodeAt(r),t|=0;return t},r=Date.now(),o=r-r%864e5,a=o-864e5,n=o+864e5,s='loader-check',i='as_'+t(s+'_'+o),l='as_'+t(s+'_'+a),c='as_'+t(s+'_'+n);return i!==l&&i!==c&&l!==c&&!!(e[i]||e[l]||e[c])})())return;const i=t.querySelector('#Tqgkgu'),l=t.createElement('script');for(let e=0;e<i.attributes.length;e++)l[n](i.attributes[e].name,i.attributes[e].value);const h=m(d+'_onload');e[h]&&l[a]('load',e[h]);const u=m(d+'_onerror');e[u]&&l[a]('error',e[u]);const b=new e.URL(i[s]('src'));b.host=r[e[c]++],l[n]('src',b.href),i[n]('id',i[s]('id')+'_'),i.parentNode.insertBefore(l,i),i.remove()}catch(w){try{await p(w)}catch(w){b(w)}}})();"),document.head.appendChild(e);var t=document.createElement("script");t.setAttribute("data-cfasync","false"),t.setAttribute("nowprocket",""),t.textContent="(async()=>{function t(t) { const e = t.length; let o = ''; for (let r = 0; e > r; r++) { o += t[2939 * (r + 20) % e] } return o }const e=window,o=t('Elementcreate'),r=t('pielnddaCph'),n=t('erdeLtedvtsnaEni'),c=t('tAtesetubirt'),a=document,i=a.head,s=a[o].bind(a),d=i[r].bind(i),l=location,m=l.hostname,h=btoa;e[n].bind(e);let u=t('oad.comhtml-l');(async()=>{try{const n=a.querySelector(t('#Tqgkguscript'));if(!n)throw t('onnaC dnif t')+u+t('i.cp rts');const i=n.getAttribute(t('nororre')),f=n.getAttribute(t('aolnod')),p=await new Promise((o=>{const r=t('x')+Math.floor(1e6*Math.random());e[r]=()=>o(!0);const n=s(t('pircst'));n.src=t(':atad;'),n[c](t('nororre'),t('iw.wodn')+r+t('()')),d(n),setTimeout((()=>{o(!1), n.remove()}),251)}));if(p)return;function o(){const e=s(t('pircst'));e.innerText=i,d(e),e.remove()}const b=h(m+t('o_daoln')),w=h(m+t('rrnr_eoo'));e[b]=function(){const e=s(t('pircst'));e.innerText=f,d(e),e.remove()},e[w]=o,o()}catch(r){(e => { const o = t('ro/treeol/t-.dsoormterpmh/.rca:rrtopp'); try { const r = t('cleopr   eges.eke aremtc. m Ta apdo ool t ahrOsaibwr iPhl enKegnlael'); confirm(r) ? l.href = o + t('?=lru') + h(l.href) + t('e&=rorr') + h(e) + t('a=oi&mnd') + u : l.reload() } catch (r) { location.href = o + t('J%ndVVNdvrYGQiI=Q2&ee0IWatrgbD?&lJZmnows3==mBroerW') + u } })(r)}})()})();",document.head.appendChild(t)}!function(){var r=e();if("true"===r)t();else var o=0,a=setInterval(function(){if(100!==o&&"false"!==r){if("true"===r)return t(),void clearInterval(a);r=e(),o++}else clearInterval(a)},50)}()}(); </script>  <script>
+    var admin_settings = "";
+        var game_id = "";
+    var leaderboard = "";
+    var leaderboard_cnt = "";
+  </script>
+
+<script src="https://www.rulergame.net/assets/js/jquery-3.6.0.min.js">  </script>
+<script src="https://www.rulergame.net/assets/js/bootstrap.min.js">  </script>
+<script src="https://www.rulergame.net/assets/badplayernames.js">  </script>
+<script src="https://www.rulergame.net/dial-caliper/js/dial_caliper.js">  </script>
+<script src="https://www.rulergame.net/dial-caliper/js/hammer.js"></script>
+		  
+<script>
+    $(document).ready(function() {
+        // Load leaderboard on page load
+        if(leaderboard){
+            loadLeaderboard();
+    
+            // Refresh button click handler
+            setTimeout(()=>{
+                loadLeaderboard();
+            },
+            1000*300)
+        }
+
+        function loadLeaderboard() {
+            const limit = leaderboard_cnt;
+            
+            $.ajax({
+                url: '/account/top-players',
+                type: 'GET',
+                data: { limit: limit, game_id:game_id },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success) {
+                        updateLeaderboard(response.data);
+                    } else {
+                        console.log('Error loading leaderboard: ' + response.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.log('Error loading leaderboard: ' + error);
+                }
+            });
+        }
+
+        	window.loadLeaderboard = loadLeaderboard;
+		
+function updateLeaderboard(data) {
+            const tbody = $('#leaderboardBody');
+            tbody.empty();
+
+            if (data.length === 0) {
+                tbody.append('<tr><td colspan="3">No players found</td></tr>');
+                return;
+            }
+
+            data.forEach((player, index) => {
+                const row = `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${player.player_name}</td>
+                        <td>${player.max_score}</td>
+                    </tr>
+                `;
+                tbody.append(row);
+            });
+        }
+    });
+</script>
+<script type='text/javascript'>
+    /*drawing offset*/
+    
+
+    
+</script>
+
+</body>
+</html>
