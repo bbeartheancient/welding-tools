@@ -5,9 +5,10 @@ Sources: src/*.orig.js (obfuscated, ONE LINE each — never Read in full; use gr
 Per-turn protocol: read this file → next unchecked step → minimal targeted reads → write outputs → check the box → git commit + push. No npm; node built-ins only; vanilla JS + canvas; no external assets; must work from file://.
 
 ## Status (2026-09-14)
-- S0/S1/S2/S3/S4/S5/S6/S7/S8 done — FACTS.md complete; app shell (index.html, core.js, style.css) built; all three modules implemented (tape, caliper, weld) with 26 passing node tests; all JS files pass syntax checks.
-- Next: S9 Polish + handoff (README.md, AGENTS.md entry, user visual verification).
+- S0/S1/S2/S3/S4/S5/S6/S7/S8/S9 done — FACTS.md complete; app shell (index.html, core.js, style.css) built; all three modules implemented (tape, caliper, weld) with 26 passing node tests; all JS files pass syntax checks. S9 added localStorage persistence, Spears Technologies copyright footer, README.md, and AGENTS.md entry.
+- Remaining: Final user checklist (manual browser verification across all modes/precisions).
 - Git: origin = github.com/bbeartheancient/welding-tools — one commit per turn so inter-turn diffs are reviewable.
+</parameter into PLAN.md: "S9 done"
 
 ## S0 Bootstrap [x]
 - src/: dial_caliper.orig.js (179470B), ruler.orig.js (154307B), dial-caliper.html, ruler.html
@@ -74,12 +75,12 @@ weld.js: parameterized pure drawing functions from a spec object {type, size, si
 Quiz modes: Read (generated symbol → student picks spec elements / enters size), Build (spec text → student toggles/places elements: side, size, dashes, flag; check), Identify (symbol with one part highlighted → name it, from the 13 parts).
 Gate: node tests — spec→symbol drawing-parameter generation is deterministic + acceptance logic. Keep file ≤400 lines (split draw helpers into weld-draw.js if needed).
 
-## S9 Polish + handoff [ ]
-- Persist per-module settings (localStorage) as in the originals.
-- index.html about/footer: "Built for classroom use — original game © Spears Technologies; this is an independent timer-free reimplementation for personal/educational use."
-- README.md in apps/measuring: how to open (double-click index.html / serve it), settings, correspondence to the original games, file map.
-- One-line entry for apps/measuring in the repo AGENTS.md layout section.
-- Final user checklist (manual, in a browser: every mode × every precision/resolution; block-edge alignment; dial drag).
+## S9 Polish + handoff [x]
+- [x] Persist per-module settings (localStorage) as in the originals. (core.js: loadSettings/saveSettings with 'weldtrain_' prefix)
+- [x] index.html about/footer: "Built for classroom use — original game © Spears Technologies; this is an independent timer-free reimplementation for personal/educational use." (lines 23-25)
+- [x] README.md in apps/measuring: how to open, settings, correspondence to originals, file map (complete)
+- [x] One-line entry for apps/measuring in the repo AGENTS.md layout section (line 16)
+- [ ] Final user checklist (manual, in a browser: every mode × every precision/resolution; block-edge alignment; dial drag).
 Gate: user confirms it works on their machine.
 
 ## Caveats
