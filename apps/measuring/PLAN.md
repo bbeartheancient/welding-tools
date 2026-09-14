@@ -5,8 +5,8 @@ Sources: src/*.orig.js (obfuscated, ONE LINE each — never Read in full; use gr
 Per-turn protocol: read this file → next unchecked step → minimal targeted reads → write outputs → check the box → git commit + push. No npm; node built-ins only; vanilla JS + canvas; no external assets; must work from file://.
 
 ## Status (2026-09-14)
-- S0/S1/S2/S3/S4 done — FACTS.md complete for ## caliper (8 bullets) and ## ruler (6 bullets), plus ## shared and build-ready summary table. S3 folded artifacts preserved in ref/ruler-folded.txt + ref/ruler2.txt.
-- Next: S5 App shell (index.html with 3 tabs + core.js engine) → FACTS.md ## welding (from ref/aws-weld-symbol.html + ref/weld-symbol-chart.html).
+- S0/S1/S2/S3/S4/S5/S6/S7/S8 done — FACTS.md complete; app shell (index.html, core.js, style.css) built; all three modules implemented (tape, caliper, weld) with 26 passing node tests; all JS files pass syntax checks.
+- Next: S9 Polish + handoff (README.md, AGENTS.md entry, user visual verification).
 - Git: origin = github.com/bbeartheancient/welding-tools — one commit per turn so inter-turn diffs are reviewable.
 
 ## S0 Bootstrap [x]

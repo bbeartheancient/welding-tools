@@ -208,6 +208,16 @@ Source: ref/aws-weld-symbol.html (parabuild v6 manual), ref/weld-symbol-chart.ht
 - Step intermittent: welds on same side, offset from each other
 - The pitch (spacing) is the distance between corresponding points on adjacent welds
 
+**Joint symbol catalog (from arccaptain chart):**
+- **Fillet weld**: right triangle; joins two pieces at an angle (T-joints, lap joints); most common weld
+- **Groove welds**: various prep types — square, bevel (single/double), V (single/double), U (single/double), J (single/double); used for butt joints
+- **Plug/Slot welds**: circle (plug) or rectangle (slot); welds through holes in one member to join to another
+- **Surfacing weld**: flat line with weld symbol below; deposits weld metal on surface
+- **Seam weld**: circle with line through it; resistance welding
+- **Spot weld**: circle; resistance welding
+- **Projection weld**: circle with raised projection
+- **Weld all around**: circle at junction of reference line and leader
+
 **v1 scope (locked):**
 - Focus: fillet welds (most common in structural work)
 - Quiz modes:
