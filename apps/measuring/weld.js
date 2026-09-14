@@ -35,7 +35,7 @@ var WeldGame = (function() {
     var settings = weldtrain.loadSettings('weld', defaults);
     var engine = weldtrain.createEngine('weld', { levelUpAfter: 10 });
 
-    panel.innerHtml =
+    panel.innerHTML =
       '<div class="question" id="weld-question">Loading...</div>' +
       '<div class="game-area"><canvas id="weld-canvas" width="900" height="500"></canvas></div>' +
       '<div class="action-buttons">' +
