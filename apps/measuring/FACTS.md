@@ -172,7 +172,50 @@ Source: `src/ruler.deobf.js` (158965 chars, single line). All hex arithmetic nod
 - Settings change rebuilds ruler and resets game (score, strikes, level).
 
 ## welding
-(pending — S4: 13 parts, placement rules, symbol catalog, v1 scope)
+Source: ref/aws-weld-symbol.html (parabuild v6 manual), ref/weld-symbol-chart.html (arccaptain). Cross-verified against AWS D1.1.
+
+**The 13 parts of the basic AWS weld symbol:**
+1. Arrow — points to the weld joint location
+2. Leader — line connecting the symbol to the joint
+3. Reference line — horizontal line where all weld info is placed
+4. Weld type — indicates the type of weld (fillet, groove, etc.)
+5. Shop or Field weld — flag at far end of reference line for field welds
+6. Weld size — leg length for fillets; throat or root opening for grooves
+7. Weld symbol — the basic symbol (triangle for fillet, V for groove, etc.)
+8. Contour — flat, convex, or concave finish requirement
+9. Finish — method of finishing (machined, ground, chipped, etc.)
+10. Root Gap — the gap between joint members at the root
+11. Intermittent welds — dash/space pattern for non-continuous welds
+12. Tail — additional info like welding process, specs, notes
+13. Welding process reference and class — specified in tail
+
+**Placement rules:**
+- Below reference line = weld on the arrow side of the joint
+- Above reference line = weld on the far side of the joint
+- Both above and below = weld on both sides
+- Weld size is always to the LEFT of the weld symbol
+- Weld length is to the RIGHT of the weld symbol
+- For intermittent welds: weld length is shown first, then pitch (spacing) in parentheses. Example: "2" (5)" means 2-inch welds spaced 5 inches apart.
+- All-welds-around: a circle at the junction of the reference line and leader indicates the weld goes all around the joint
+
+**Shop vs Field weld:**
+- No flag = shop weld (done in the fabrication shop)
+- Flag at far end of reference line = field weld (done on site after assembly)
+- A symbol can have both: shop weld on arrow side, field weld on far side
+
+**Intermittent welds:**
+- Staggered intermittent: alternating welds on opposite sides of the joint
+- Step intermittent: welds on same side, offset from each other
+- The pitch (spacing) is the distance between corresponding points on adjacent welds
+
+**v1 scope (locked):**
+- Focus: fillet welds (most common in structural work)
+- Quiz modes:
+  - Identify: show a weld symbol with one part highlighted → student names the part (from the 13)
+  - Read: show a complete weld symbol → student identifies all parts (type, size, side, etc.)
+  - Build: give a weld specification → student selects and arranges the correct parts
+- Groove welds: identification only (recognize the symbol) in v1
+- Process symbols: simplified (identify basic process from tail)
 
 ## build-ready summary
 Compact contracts for the build steps (S5-S8). Each module exports `{id, title, init(canvasHost, settingsHost, resultsHost, engine)}`.

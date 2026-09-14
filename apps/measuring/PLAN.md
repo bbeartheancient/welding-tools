@@ -5,8 +5,8 @@ Sources: src/*.orig.js (obfuscated, ONE LINE each — never Read in full; use gr
 Per-turn protocol: read this file → next unchecked step → minimal targeted reads → write outputs → check the box → git commit + push. No npm; node built-ins only; vanilla JS + canvas; no external assets; must work from file://.
 
 ## Status (2026-09-14)
-- S0/S1/S2/S3 done — FACTS.md complete for ## caliper (8 bullets) and ## ruler (6 bullets), plus ## shared and build-ready summary table. S3 folded artifacts preserved in ref/ruler-folded.txt + ref/ruler2.txt.
-- Next: S4 Welding facts → FACTS.md ## welding (from ref/aws-weld-symbol.html + ref/weld-symbol-chart.html).
+- S0/S1/S2/S3/S4 done — FACTS.md complete for ## caliper (8 bullets) and ## ruler (6 bullets), plus ## shared and build-ready summary table. S3 folded artifacts preserved in ref/ruler-folded.txt + ref/ruler2.txt.
+- Next: S5 App shell (index.html with 3 tabs + core.js engine) → FACTS.md ## welding (from ref/aws-weld-symbol.html + ref/weld-symbol-chart.html).
 - Git: origin = github.com/bbeartheancient/welding-tools — one commit per turn so inter-turn diffs are reviewable.
 
 ## S0 Bootstrap [x]
@@ -40,7 +40,7 @@ Sub-steps:
 Key findings: tick height hierarchy {1:48,2:38,4:28,8:22,16:16,32:10,64:6}px; 256px/inch; targets in 64ths; Type mode accepts reduced/unsimplified/both per setting; scoring = level 1-10, 10-100pts, level-up every 10 correct, 3 strikes; sessionStorage prefix "new_english_ruler_".
 Gate: 6/6 bullets + ## shared filled + build-ready table appended, no TBD → mark [x].
 
-## S4 Welding facts → FACTS.md ## welding [ ]
+## S4 Welding facts → FACTS.md ## welding [x]
 From ref/aws-weld-symbol.html (parabuild v6): the 13 numbered parts of the basic symbol; placement rules (below ref line = arrow side; above = far side; both = both sides); weld size goes left of the symbol on the reference line; intermittent welds (dash/space on the line, the "12" note); shop (no flag) vs field (flag at far end of ref line).
 From ref/weld-symbol-chart.html (arccaptain): groove/fillet joint symbol list + geometry; flag/contour/finish chart entries (grep the saved file).
 v1 scope (lock here): fillet-centric — identify (name a highlighted part), read (symbol → state spec: size/side/intermittent/shop-field), build (spec text → assemble from parts palette: symbol right of line, size left, flags, dashes). Groove symbols: identification only in v1.
