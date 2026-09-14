@@ -4,10 +4,9 @@ Timer-free classroom reimplementation of rulergame.net (Tape Measure, Dial Calip
 Sources: src/*.orig.js (obfuscated, ONE LINE each — never Read in full; use grep -bo offsets + byte windows), src/*.html (settings UI = ground truth), ref/* (welding references).
 Per-turn protocol: read this file → next unchecked step → minimal targeted reads → write outputs → check the box → git commit + push. No npm; node built-ins only; vanilla JS + canvas; no external assets; must work from file://.
 
-## Status (2026-09-01)
-- S0/S1/S2 done — FACTS.md ## caliper complete (all 8 bullets, incl. S2 session-2: dial geometry, drag quantums, Type-V2 formats, checkGuess tolerances).
-- S3 in progress: tools/facts-ruler-1..5.js built (facts-ruler-5 = constant folder); the WHOLE src/ruler.deobf.js (137511 chars) is folded into /tmp/opencode/ruler-folded.txt (79 sections, 2335 lines, all core fns readable) + /tmp/opencode/ruler2.txt (raw bodies). Artifact is self-contained: iEAjkx=zF_ANz=30, sessionStorage prefix "new_english_ruler_", settings-load block all inside. All 6 S3 bullets verified derivable from it.
-- Gap: FACTS.md ## ruler / ## shared still (pending) — the analysis was never transcribed. Next: preserve /tmp artifacts → ref/ → transcribe → check S3 → S4.
+## Status (2026-09-14)
+- S0/S1/S2/S3 done — FACTS.md complete for ## caliper (8 bullets) and ## ruler (6 bullets), plus ## shared and build-ready summary table. S3 folded artifacts preserved in ref/ruler-folded.txt + ref/ruler2.txt.
+- Next: S4 Welding facts → FACTS.md ## welding (from ref/aws-weld-symbol.html + ref/weld-symbol-chart.html).
 - Git: origin = github.com/bbeartheancient/welding-tools — one commit per turn so inter-turn diffs are reviewable.
 
 ## S0 Bootstrap [x]
@@ -30,15 +29,15 @@ Targeted reads only: grep -bo on the DEOBF file, then ≤1.5k-token byte windows
 Record concrete values (no TBD): 1) beam: top (cm) + bottom (inch) scales — tick spacing, which labeled, inch subdivision (1/64? 1/16?), beam length in inches. 2) dial per resolution (0.001in, 1/8, 1/16, 1/32, 1/64) and unit: divisions, labels, one-revolution value, major/minor tick styling, pointer. 3) value model: generated value min/max + step per resolution; value→(jaw pos, beam reading, dial reading). 4) Find mode: click tolerance (units or px), drag behavior, what is displayed. 5) Type mode: exact accepted answer format per res/unit, parse/normalize + comparison rule, keypad layout (digits + which specials on typeCanvas). 6) Trainer mode: display format (5-digit vernier control?), how value shown between +/- buttons. 7) Scoring: points/level 10..100, time limits 20→2, level-up = 5 correct, 3 strikes, timer-off behavior. 8) Settings: defaults + localStorage keys + current-settings text (lower-right).
 Gate: all 8 bullets filled.
 
-## S3 Ruler facts → FACTS.md ## ruler [ ] (in progress — see Status)
+## S3 Ruler facts → FACTS.md ## ruler [x]
 Sub-steps:
 - [x] Extraction tooling: tools/facts-ruler-1..5.js (ruler-5 = constant folder over the whole file)
-- [x] Whole src/ruler.deobf.js folded → /tmp/opencode/ruler-folded.txt (79 sections; covers all 6 bullets below) + ruler2.txt (raw bodies)
-- [ ] cp /tmp/opencode/ruler-folded.txt + ruler2.txt → ref/ (preserve — /tmp is ephemeral)
-- [ ] Transcribe all 6 bullets into FACTS.md ## ruler from ref/ruler-folded.txt (no TBD); cross-check settings defaults vs src/ruler.html selected options
-- [ ] Fill FACTS.md ## shared from both src/*.html (select ids + defaults, HUD display text, storage-key conventions)
-- [ ] Append "build-ready" summary block (compact table: exact rendering + acceptance contract per module) — the only doc the build steps read
-1) Tick layout per precision: height hierarchy (whole > 1/2 > 1/4 ... exact array), which labeled (whole numbers; also 1/2?), label position, px per inch. 2) Question generation: target = random multiple of 1/precision within length; is 0 excluded?; auto length behavior. 3) Find mode: click tolerance (px or value), green bar, red line after miss. 4) Type mode: exact accepted syntax ("4 3/16", "4.1875", "3/16"); reduced-vs-unsimplified rule per setting (Both/Simplified/Unsimplified) incl. decimal notation mode; keypad layout; Space/Enter/Backspace handling. 5) Scoring: 10..100 pts, times 10s→1s, level-up every 10 correct, strikes. 6) Settings: defaults (Q16, Marks16, Length 4in/auto, Fractions, Both, Find, Timer On) + Questions≤Marks constraint + auto-adjust direction + storage keys (sessionStorage, prefix "new_english_ruler_" — confirmed in the folded artifact; NOT localStorage, per caliper precedent).
+- [x] Whole src/ruler.deobf.js folded → ref/ruler-folded.txt (79 sections; covers all 6 bullets) + ref/ruler2.txt (raw bodies)
+- [x] cp → ref/ (preserved — was in /tmp, now in repo)
+- [x] Transcribe all 6 bullets into FACTS.md ## ruler (no TBD); cross-checked settings defaults vs src/ruler.html
+- [x] Fill FACTS.md ## shared from both src/*.html (settings UI, HUD, storage-key conventions)
+- [x] Append "build-ready" summary block (compact tables: rendering + acceptance contracts per module)
+Key findings: tick height hierarchy {1:48,2:38,4:28,8:22,16:16,32:10,64:6}px; 256px/inch; targets in 64ths; Type mode accepts reduced/unsimplified/both per setting; scoring = level 1-10, 10-100pts, level-up every 10 correct, 3 strikes; sessionStorage prefix "new_english_ruler_".
 Gate: 6/6 bullets + ## shared filled + build-ready table appended, no TBD → mark [x].
 
 ## S4 Welding facts → FACTS.md ## welding [ ]

@@ -1,7 +1,32 @@
 # FACTS — extracted game facts (the only document the build steps read)
 
 ## shared
-(pending — filled from src/*.html: settings UI patterns, scoring/state-machine display, localStorage key conventions; completed at end of S3)
+Filled from src/dial-caliper.html + src/ruler.html. Both games share the same UI shell pattern.
+
+**Settings panel:** Gear icon (⚙) in top-right opens a settings box overlay. Each setting is a row with label + control (select dropdown or radio buttons). "Apply Settings" button at bottom closes the box and applies. Settings changes reset the current game (new question, reset score/strikes/level).
+
+**Score display:** `#txtScore` element, updated via `drawScore()`. Ruler: 5-digit zero-padded string ("00010"). Caliper: raw number. Both use monospace font for fixed width.
+
+**Strike board:** `#strikeBoard` — 3 circles (ruler) or 3 strike indicators (caliper). `drawStrike()` called on wrong answer. 3 strikes = game over. Strike board shown only after first strike.
+
+**Level indicator:** Ruler: `#levelCanvas` — 10 squares drawn, filled black up to current level. Caliper: no visual level indicator (level shown in text during level-up cheer). Level-up cheer: ruler shows "Level N" banner for 1000ms.
+
+**Timer:** Both use `#timerCanvas` — horizontal bar that depletes left-to-right over the time limit. Color changes: green (>6s), yellow (3-6s), red (<3s). Timer hidden when stgTimer="Off".
+
+**Cheer board:** `#cheerBoard` — transient overlay shown for correct answers ("Correct!") and level-ups. Disappears after timeout.
+
+**Sound toggle:** `#stgSounds` checkbox in settings. When off, no sound effects for correct/wrong/level-up.
+
+**Game state machine:** New question → student interacts (click/drag/type) → student submits → checkGuess() → correct (score up, next question) or wrong (strike, feedback) → if 3 strikes, game over. Timer runs in parallel; timeout triggers forced submit.
+
+**localStorage vs sessionStorage:** Ruler uses sessionStorage with prefix "new_english_ruler_" (no separator, no underscore after prefix). Caliper uses sessionStorage with prefix "dial_caliper" (no separator). Neither uses localStorage. Settings persist only for the current browser session.
+
+**Key conventions:** Both games:
+- Use jQuery for DOM manipulation
+- Canvas for all game graphics (ruler, caliper)
+- No external assets (no images) — all graphics drawn programmatically
+- Responsive: adapt to window size
+- No account system, no scoring submission to server
 
 ## caliper
 Source: `src/dial_caliper.deobf.js` (157798 chars, single line). Offsets below are CHAR offsets (peek.js); `grep -bo` byte offsets run +509 (chars ~54k–113k) / +513 (past ~114k) higher due to multibyte Unicode fraction chars.
@@ -87,7 +112,103 @@ Figured out: full game loop (newGame → showNewQuestion → checkGuess → doSt
 - Pointer/drag state consts: `dragMode` 0/1/2 (verified raw-eval); `yJVBqWHkRjLSRF_TuJEWPl` = trace/profiler hook called at fn entry (ignore in port).
 
 ## ruler
-(pending — S3: 6 bullets + build-ready summary table)
+Source: `src/ruler.deobf.js` (158965 chars, single line). All hex arithmetic node-evaluated via tools/facts-ruler-1..5.js. Char offsets shown where available.
+
+1. **Tick layout per precision** — DONE (tools/facts-ruler-4.js; tick table char 54609..55536)
+- 256 pixels per inch (char 36781: constant 256 in canvas width calc)
+- Tick height hierarchy (px): 1→48, 2→38, 4→28, 8→22, 16→16, 32→10, 64→6. Any precision not in this set (e.g. 3, 5) uses the next-lower height (3→38, 5→28).
+- Tick height determined by `FractionReduce.reduce(numerator, denominator)` — the reduced denominator selects the tick height. Example: 2/16 reduces to 1/8 → 22px tick.
+- Only whole-inch marks (0, 1, 2, ...) are labeled. Font "bold 24px Arial" for labels.
+- Labels centered at tick position: x = tick_x - text_width/2. Y position varies by mode (Type: 8px above ruler; Find: 10px below).
+- Canvas width = length_inches × 256 + 60 (30px left margin + 30px right margin).
+- Marks drawn from left margin (x=30) to right edge of ruler.
+
+2. **Question generation** — DONE (PcHNyNEtZfOzIUyIowzeLq char 134007)
+- Target = random integer index in [0, length_inches × 64] (i.e. random multiple of 1/64-inch within ruler length).
+- 0 is a valid target (index 0 = "0"). Previous target excluded to avoid repeats.
+- Auto length behavior: if window width is too narrow for selected length, override to floor((innerWidth - 50) / 256), minimum 1 inch. Show message "Will display as N" based on your current browser size". If window is wide enough, use selected length.
+- Measurement array built at game start: array[0]="0", then for each 64th mark: format as fraction (reduced or not per setting). See bullet 4.
+
+3. **Find mode** — DONE (I$hcpxklfBUSvixWHreFzoevap char 103622)
+- Target value shown as text above ruler (format: fraction or inch+fraction).
+- Student moves mouse over ruler; green vertical bar follows mouse position.
+- On click: click position (pixels) converted to ruler value via click_x - left_margin)/256 × 64 = index in 64ths.
+- No explicit tolerance — click maps to nearest 64th (rounding). If click is closer to tick A than tick B, tick A is the guess.
+- Correct: show cheer, update score, advance to next question.
+- Wrong: red vertical line at correct position, show correct answer text, record strike.
+- Timer: if on, counts down; forced submit on timeout (treat as wrong).
+
+4. **Type mode** — DONE (c_jSQIrNC char 33857; PcHNyNEtZfOzIUyIowzeLq char 134007)
+- Accepted formats depend on notation setting:
+  - **Fractions**: "n" (integer), "n m/d" (mixed), or "m/d" (proper fraction). Whitespace flexible. Examples: "3", "2 1/4", "1/2".
+  - **Decimals**: "n" or "n.ddd" (e.g. "3", "2.25").
+- Reduced vs unsimplified rule (governed by `stgFractionStyle` setting):
+  - "On" (reduced only): student must enter reduced fraction. "2/4" is wrong for 1/2 target; only "1/2" is accepted.
+  - "Off" (unsimplified only): student must enter fraction with denominator matching question precision. For precision 8: "2/8" is correct for 1/4; "1/4" is wrong.
+  - "Both": accepts any equivalent fraction that maps to the same 64ths value. "1/2", "2/4", "4/8" all accepted.
+- Decimal cross-acceptance: in "Both" mode, "0.5" is accepted for 1/2 target. In reduced/unsimplified modes, decimal format is only accepted if it exactly represents the target value.
+- Keypad layout: 10 keys (0-9), "Back" (delete), "Space" (for mixed fraction separator), "." (decimal point, fractions only), "/" (fraction slash, fractions only).
+- Keypad hit-testing: buttons arranged in grid. 0-9 in row 1 (left to right). Back at bottom-right. Space below 0. . below 1. / below 2.
+
+5. **Scoring** — DONE (sKvEqDqjhUmjfOtYjjixhofkf char 110336; I$hcpxklfBUSvixWHreFzoevap char 103622)
+- Level starts at 1, point value starts at 10.
+- Correct answer: score += point_value. Level counter increments.
+- Every 10 correct answers: level up (max level 10), point value increases by 10 (so 10→20→...→100). Show "Level N" cheer for 1000ms.
+- Strike board: 3 circles. Strike fills one circle. 3 strikes = game over.
+- Strike resets level counter to 0 (but does not reset score or level).
+- Timer: duration = 12 - 2×level seconds. Level 1: 10s, Level 5: 2s, Level 10: -8s (clamped to 1s).
+- Timeout forced-submit counts as wrong answer (strike).
+- Score display: 5-digit zero-padded ("00010").
+
+6. **Settings** — DONE (src/ruler.html; folded region AwFc$BUXV_qYwXBiizpozANr char 111145)
+- `stgRulerLength`: default 4 inches. Options: 1, 2, 3, 4, 6, 8, 12 (and "auto" which auto-fits to window).
+- `stgQuestionPrecision`: default 16. Options: 1, 2, 4, 8, 16, 32, 64. Determines the denominators used in questions.
+- `stgMarkPrecision`: default 16. Must be ≥ question precision. Determines tick mark granularity. Options: 1, 2, 4, 8, 16, 32, 64.
+- `stgNotation`: default "Fractions". Options: "Fractions", "Decimals".
+- `stgFractionStyle`: default "On". Options: "On" (reduced only), "Off" (unsimplified only), "Both". Only relevant for fractions notation.
+- `stgMode`: default "Find". Options: "Find", "Type".
+- `stgTimer`: default "On". Options: "On", "Off".
+- Storage: sessionStorage with prefix "new_english_ruler_" (confirmed in folded artifact). Keys: "new_english_ruler_stgRulerLength", etc.
+- Settings change rebuilds ruler and resets game (score, strikes, level).
 
 ## welding
 (pending — S4: 13 parts, placement rules, symbol catalog, v1 scope)
+
+## build-ready summary
+Compact contracts for the build steps (S5-S8). Each module exports `{id, title, init(canvasHost, settingsHost, resultsHost, engine)}`.
+
+### Tape Measure (S6)
+| Setting | Default | Options | Notes |
+|---------|---------|---------|-------|
+| questionPrecision | 16 | 1,2,4,8,16,32,64 | Denominator for generated questions |
+| markPrecision | 16 | 1,2,4,8,16,32,64 | Must be ≥ questionPrecision |
+| length | 4 inches | 1,2,3,4,6,8,12,auto | Auto-fits to window width |
+| notation | Fractions | Fractions, Decimals | |
+| fractionStyle | On (reduced) | On, Off, Both | On=reduced only; Off=unsimplified at precision; Both=any equivalent |
+| mode | Find | Find, Type | Find=click ruler; Type=use keypad |
+| timer | On | On, Off | |
+
+Tick heights (px): 1→48, 2→38, 4→28, 8→22, 16→16, 32→10, 64→6. Scale: 256px/inch. Margins: 30px each side.
+
+Answer acceptance: index into measurement array (0 to length×64). Type mode: parse input → compute 64ths value → look up in array. Accept if array[guess_index] == array[target_index] (for On/Off) or if guess_index == target_index (for Both).
+
+### Dial Caliper (S7)
+| Setting | Default | Options | Notes |
+|---------|---------|---------|-------|
+| scale | Inch | Inch, Centimeter | |
+| resolution | 0.001 in | 0.001, 1/8, 1/16, 1/32, 1/64 in; 0.01mm, 0.1mm, 1mm | Resolution options differ by scale |
+| mode | Find (Game) | Find, Type, Trainer | Trainer=adjust and read |
+| timer | On | On, Off | |
+
+Question generation: random value within 0-2" (inch) or 0-5cm (metric) at appropriate resolution. Value decomposed into (beam_reading, dial_position). Beam has cm (top) and inch (bottom) scales. Dial has 100 divisions (0.001in) or 64 divisions (fractional inch).
+
+Answer acceptance: Find mode — exact match of decimal value (to appropriate precision). Type mode — parse input, compare to target value. Trainer mode — no correct/wrong (practice only).
+
+### Welding Symbols (S8)
+| Mode | Description |
+|------|-------------|
+| Identify | Highlight a part of the symbol; student names it (from 13 parts) |
+| Read | Show a complete symbol; student identifies all parts (type, size, side, etc.) |
+| Build | Give a spec; student assembles the symbol from parts palette |
+
+v1 scope: fillet welds only. Parts: arrow, reference line, basic symbol, weld size, weld length, pitch (intermittent), groove size, weld metal, all-welds-around circle, contour, finish, field flag, tail. Placement rules: below ref line = arrow side; above = far side; both = both sides. Weld size goes left of symbol on reference line.
