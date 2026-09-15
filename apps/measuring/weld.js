@@ -1,5 +1,4 @@
-// weld.js — AWS Weld Symbol Trainer
-// Quiz modes: Identify (name a part), Read (symbol→spec), Build (spec→symbol)
+// weld.js — AWS Weld Symbol Trainer (Identify/Read/Build modes)
 
 var WeldGame = (function() {
   'use strict';
@@ -8,7 +7,7 @@ var WeldGame = (function() {
     { id: 1, name: 'Arrow', desc: 'Points to the joint' },
     { id: 2, name: 'Leader', desc: 'Line from arrow to reference line' },
     { id: 3, name: 'Reference line', desc: 'Horizontal baseline for all symbols' },
-    { id: 4, name: 'Weld type', desc: 'Symbol indicating weld type (triangle=fillet)' },
+    { id: 4, name: 'Weld type', desc: 'Symbol indicating weld type (e.g. triangle=fillet)' },
     { id: 5, name: 'Shop/Field weld', desc: 'Flag at far end indicates field weld' },
     { id: 6, name: 'Weld size', desc: 'Fillet weld leg length, left of symbol' },
     { id: 7, name: 'Weld symbol', desc: 'The weld type graphic' },
@@ -20,6 +19,17 @@ var WeldGame = (function() {
     { id: 13, name: 'Process reference', desc: 'Welding process code in tail' }
   ];
 
+  var WELD_TYPES = [
+    { id: 'fillet', name: 'Fillet', symbol: 'triangle' },
+    { id: 'groove', name: 'Groove', symbol: 'vee' },
+    { id: 'plug', name: 'Plug', symbol: 'circle' },
+    { id: 'slot', name: 'Slot', symbol: 'rectangle' },
+    { id: 'seam', name: 'Seam', symbol: 'dots' }
+  ];
+
+  var CANVAS_W = 900;
+  var CANVAS_H = 500;
+
   function init(panel) {
     var settingsDef = [
       { key: 'quizMode', label: 'Quiz mode', type: 'radio',
@@ -28,18 +38,29 @@ var WeldGame = (function() {
           {value: 'read', label: 'Read Symbol'},
           {value: 'build', label: 'Build Symbol'}
         ]
+      },
+      { key: 'weldType', label: 'Weld types', type: 'select',
+        options: [
+          {value: 'all', label: 'All types'},
+          {value: 'fillet', label: 'Fillet only'},
+          {value: 'groove', label: 'Groove only'}
+        ]
       }
     ];
 
-    var defaults = { quizMode: 'identify' };
+    var defaults = { quizMode: 'identify', weldType: 'all' };
     var settings = weldtrain.loadSettings('weld', defaults);
     var engine = weldtrain.createEngine('weld', { levelUpAfter: 10 });
 
     panel.innerHTML =
       '<div class="question" id="weld-question">Loading...</div>' +
-      '<div class="game-area"><canvas id="weld-canvas" width="900" height="500"></canvas></div>' +
+      '<div class="game-area"><canvas id="weld-canvas" width="' + CANVAS_W + '" height="' + CANVAS_H + '"></canvas></div>' +
+      '<div class="answer-area">' +
+        '<input type="text" id="weld-answer" placeholder="Your answer" autocomplete="off">' +
+      '</div>' +
       '<div class="action-buttons">' +
-        '<button class="btn btn-primary" id="weld-check">Check</button>' +
+        '<button class="btn btn-primary" id="weld-check">Check Answer</button>' +
+        '<button class="btn btn-secondary" id="weld-skip">Skip</button>' +
         '<button class="btn btn-warning" id="weld-settings">⚙ Settings</button>' +
       '</div>' +
       '<div class="engine-hud">' +
@@ -54,29 +75,207 @@ var WeldGame = (function() {
     engine.bindEl(panel.querySelector('.engine-hud'));
 
     var canvas = panel.querySelector('#weld-canvas');
-    var ctx = canvas.getContext('2d');
+    var ctx = canvas.get('2d');
     var questionEl = panel.querySelector('#weld-question');
+    var answerInput = panel.querySelector('#weld-answer');
     var currentQuestion = null;
-    var mode = settings.quizMode;
+
+    function randomSpec() {
+      var weldType = null;
+      if (settings.weldType === 'all') {
+        weldType = WELD_TYPES[Math.floor(Math.random() * WELD_TYPES.length)];
+      } else {
+        weldType = WELD_TYPES.find(function(t) { return t.id === settings.weldType; });
+      }
+
+      var sizes = [1, 1.5, 2, 2.5, 3, 3.5, 4];
+      var size = sizes[Math.floor(Math.random() * sizes.length)];
+      var side = Math.random() < 0.5 ? 'arrow' : 'far';
+      return {
+        weldType: weldType,
+        size: size,
+        side: side,
+        intermittent: Math.random() < 0.15,
+        field: Math.random() < 0.08,
+        tail: Math.random() < 0.1,
+        processCode: '111'
+      };
+    }
+
+    function drawSymbol(spec, highlightPart) {
+      ctx.clearRect(0, 0, CANVAS_W, CANVAS_H);
+      ctx.fillStyle = '#333';
+      ctx.font = '16px Arial';
+      ctx.lineWidth = 2;
+
+      var refY = 250;
+      var arrowX = 100;
+      var symbolX = 380;
+      var flagX = 700;
+      var tailX = 750;
+
+      // Reference line (part 3)
+      if (highlightPart === 3) {
+        ctx.strokeStyle = '#e74c3c';
+        ctx.lineWidth = 4;
+      } else {
+        ctx.strokeStyle = '#333';
+        ctx.lineWidth = 2;
+      }
+      ctx.beginPath();
+      ctx.moveTo(arrowX, refY);
+      ctx.lineTo(tailX + 50, refY);
+      ctx.stroke();
+
+      // Leader line (part 2)
+      if (highlightPart === 2) {
+        ctx.strokeStyle = '#e74c3c';
+        ctx.lineWidth = 4;
+      } else {
+        ctx.strokeStyle = '#333';
+        ctx.lineWidth = 2;
+      }
+      ctx.beginPath();
+      ctx.moveTo(arrowX, refY);
+      ctx.lineTo(arrowX + 40, refY + 30);
+      ctx.stroke();
+
+      // Arrow head (part 1)
+      if (highlightPart === 1) {
+        ctx.fillStyle = '#e74c3c';
+      } else {
+        ctx.fillStyle = '#333';
+      }
+      ctx.beginPath();
+      ctx.moveTo(arrowX + 40, refY + 30);
+      ctx.lineTo(arrowX + 30, refY + 25);
+      ctx.lineTo(arrowX + 30, refY + 35);
+      ctx.closePath();
+      ctx.fill();
+
+      // Weld symbol (part 7) and weld type (part 4)
+      var symbolColor = (highlightPart === 7 || highlightPart === 4) ? '#e74c3c' : '#333';
+      ctx.fillStyle = symbolColor;
+      ctx.strokeStyle = symbolColor;
+
+      var triangleSize = 30;
+      if (spec.side === 'arrow') {
+        ctx.beginPath();
+        ctx.moveTo(symbolX, refY);
+        ctx.lineTo(symbolX, refY + triangleSize);
+        ctx.lineTo(symbolX + triangleSize, refY);
+        ctx.closePath();
+        ctx.fill();
+      } else {
+        ctx.beginPath();
+        ctx.moveTo(symbolX, refY);
+        ctx.lineTo(symbolX, refY - triangleSize);
+        ctx.lineTo(symbolX + triangleSize, refY);
+        ctx.closePath();
+        ctx.fill();
+      }
+
+      // Weld size (part 6) - left of symbol
+      if (highlightPart === 6) {
+        ctx.fillStyle = '#e74c3c';
+      } else {
+        ctx.fillStyle = '#333';
+      }
+      var sizeText = spec.size.toString();
+      if (spec.weldType.id !== 'fillet') {
+        sizeText = spec.size + ' ' + spec.weldType.id + '"';
+      }
+      ctx.fillText(sizeText, symbolX - 60, spec.side === 'arrow' ? refY + 35 : refY - 20);
+
+      // Field weld flag (part 5)
+      if (spec.field) {
+        if (highlightPart === 5) {
+          ctx.fillStyle = '#e74c3c';
+        } else {
+          ctx.fillStyle = '#333';
+        }
+        ctx.beginPath();
+        ctx.moveTo(flagX, refY);
+        ctx.lineTo(flagX, refY - 15);
+        ctx.lineTo(flagX + 12, refY);
+        ctx.lineTo(flagX, refY + 15);
+        ctx.closePath();
+        ctx.stroke();
+      }
+
+      // Intermittent welds (part 11)
+      if (spec.intermittent) {
+        if (highlightPart === 11) {
+          ctx.strokeStyle = '#e74c3c';
+          ctx.lineWidth = 4;
+        } else {
+          ctx.strokeStyle = '#333';
+          ctx.lineWidth = 3;
+        }
+        ctx.beginPath();
+        ctx.moveTo(arrowX + 50, refY);
+        ctx.lineTo(arrowX + 130, refY);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(arrowX + 150, refY);
+        ctx.lineTo(arrowX + 230, refY);
+        ctx.stroke();
+      }
+
+      // Tail (part 12)
+      if (spec.tail) {
+        if (highlightPart === 12) {
+          ctx.strokeStyle = '#e74c3c';
+        } else {
+          ctx.strokeStyle = '#333';
+        }
+        ctx.beginPath();
+        ctx.moveTo(tailX, refY);
+        ctx.lineTo(tailX + 50, refY);
+        ctx.lineTo(tailX + 50, refY + 25);
+        ctx.lineTo(tailX, refY + 25);
+        ctx.closePath();
+        ctx.stroke();
+
+        // Process reference (part 13)
+        if (highlightPart === 13) {
+          ctx.fillStyle = '#e74c3c';
+        } else {
+          ctx.fillStyle = '#333';
+        }
+        ctx.font = '14px Arial';
+        ctx.fillText(spec.processCode, tailX + 10, refY + 18);
+      }
+    }
 
     function newQuestion() {
+      answerInput.value = '';
+      var mode = settings.quizMode;
+
       if (mode === 'identify') {
         var part = PARTS[Math.floor(Math.random() * PARTS.length)];
-        currentQuestion = { type: 'identify', part: part };
-        questionEl.innerHTML = 'Identify part #' + part.id + ' (the part highlighted in red).';
-        drawSymbolWithHighlight(part.id);
+        var spec = randomSpec();
+        currentQuestion = { type: 'identify', part: part, spec: spec };
+        questionEl.textContent = 'Identify part #' + part.id + ' (highlighted in red).';
+        drawSymbol(spec, part.id);
+        answerInput.placeholder = 'Part name';
       } else if (mode === 'read') {
         var spec = randomSpec();
         currentQuestion = { type: 'read', spec: spec };
-        questionEl.innerHTML = 'Read this weld symbol. What is the weld size?';
+        questionEl.textContent = 'Read this weld symbol. What is the weld size?';
         drawSymbol(spec);
+        answerInput.placeholder = 'Size (e.g. 2 or 2 fillet)"';
       } else {
         var spec = randomSpec();
         currentQuestion = { type: 'build', spec: spec };
-        questionEl.innerHTML = 'Draw a ' + spec.size + ' inch fillet weld, ' +
-          (spec.side === 'arrow' ? 'arrow side' : 'far side') + '.';
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        questionEl.textContent = 'Build: ' + spec.size + '" ' + spec.weldType.name.toLowerCase() + ' weld, ' +
+          (spec.side === 'arrow' ? 'arrow side' : 'far side') +
+          (spec.intermittent ? ', intermittent' : '') +
+          (spec.field ? ', field weld' : '');
+        // Draw blank canvas with just reference line for student to draw on
+        ctx.clearRect(0, 0, CANVAS_W, CANVAS_H);
         ctx.strokeStyle = '#ccc';
+        ctx.lineWidth = 2;
         ctx.beginPath();
         ctx.moveTo(100, 250);
         ctx.lineTo(700, 250);
@@ -88,159 +287,98 @@ var WeldGame = (function() {
         ctx.lineTo(120, 255);
         ctx.closePath();
         ctx.fill();
+        answerInput.placeholder = 'Draw on canvas, then enter size';
       }
     }
 
-    function randomSpec() {
-      return {
-        size: [1, 1.5, 2, 2.5, 3][Math.floor(Math.random() * 5)],
-        side: Math.random() < 0.5 ? 'arrow' : 'far',
-        intermittent: Math.random() < 0.2,
-        field: Math.random() < 0.1
-      };
-    }
-
-    function drawSymbol(spec) {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.strokeStyle = '#333';
-      ctx.fillStyle = '#333';
-      ctx.font = '18px Arial';
-      ctx.lineWidth = 2;
-
-      ctx.beginPath();
-      ctx.moveTo(100, 250);
-      ctx.lineTo(700, 250);
-      ctx.stroke();
-
-      ctx.beginPath();
-      ctx.moveTo(100, 250);
-      ctx.lineTo(120, 245);
-      ctx.lineTo(115, 250);
-      ctx.lineTo(120, 255);
-      ctx.closePath();
-      ctx.fill();
-
-      var symbolX = 350;
-      if (spec.side === 'arrow') {
-        ctx.beginPath();
-        ctx.moveTo(symbolX, 250);
-        ctx.lineTo(symbolX, 300);
-        ctx.lineTo(symbolX + 50, 250);
-        ctx.closePath();
-        ctx.fill();
-      } else {
-        ctx.beginPath();
-        ctx.moveTo(symbolX, 250);
-        ctx.lineTo(symbolX, 200);
-        ctx.lineTo(symbolX + 50, 250);
-        ctx.closePath();
-        ctx.fill();
+    function checkAnswer() {
+      if (engine.isGameOver()) {
+        engine.reset();
+        newQuestion();
+        return;
       }
 
-      ctx.fillText(spec.size.toString(), 300, spec.side === 'arrow' ? 275 : 225);
+      var input = answerInput.value.trim();
+      if (!input) return;
 
-      if (spec.field) {
-        ctx.beginPath();
-        ctx.moveTo(700, 250);
-        ctx.lineTo(700, 230);
-        ctx.lineTo(715, 250);
-        ctx.lineTo(700, 270);
-        ctx.closePath();
-        ctx.stroke();
-      }
-
-      if (spec.intermittent) {
-        ctx.lineWidth = 3;
-        ctx.beginPath();
-        ctx.moveTo(100, 250);
-        ctx.lineTo(180, 250);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(220, 250);
-        ctx.lineTo(300, 250);
-        ctx.stroke();
-        ctx.lineWidth = 2;
-      }
-    }
-
-    function drawSymbolWithHighlight(partId) {
-      drawSymbol({ size: 2, side: 'arrow', intermittent: false, field: false });
-      ctx.strokeStyle = '#e74c3c';
-      ctx.lineWidth = 4;
-      switch(partId) {
-        case 1:
-          ctx.beginPath();
-          ctx.moveTo(100, 250);
-          ctx.lineTo(120, 245);
-          ctx.lineTo(115, 250);
-          ctx.lineTo(120, 255);
-          ctx.closePath();
-          ctx.stroke();
-          break;
-        case 3:
-          ctx.beginPath();
-          ctx.moveTo(100, 250);
-          ctx.lineTo(700, 250);
-          ctx.stroke();
-          break;
-        case 7:
-          ctx.beginPath();
-          ctx.moveTo(350, 250);
-          ctx.lineTo(350, 300);
-          ctx.lineTo(400, 250);
-          ctx.closePath();
-          ctx.stroke();
-          break;
-      }
-    }
-
-    panel.querySelector('#weld-check').addEventListener('click', function() {
-      if (engine.isGameOver()) { engine.reset(); }
       if (currentQuestion.type === 'identify') {
-        var answer = prompt('What is the name of this part?');
-        if (answer === null) return;
-        if (answer.toLowerCase() === currentQuestion.part.name.toLowerCase()) {
+        var partName = input.toLowerCase();
+        var correctName = currentQuestion.part.name.toLowerCase();
+        if (partName === correctName || partName.includes(correctName) || correctName.includes(partName)) {
           engine.recordCorrect();
-          showFeedback('correct', 'Correct! ' + currentQuestion.part.name + ' — ' + currentQuestion.part.desc);
+          showFeedback('correct', 'Correct! This is the ' + currentQuestion.part.name + '. ' + currentQuestion.part.desc);
         } else {
           engine.recordStrike();
-          showFeedback('wrong', 'Wrong. This is the ' + currentQuestion.part.name + ' (' + currentQuestion.part.desc + ')');
+          showFeedback('wrong', 'Incorrect. This is the ' + currentQuestion.part.name + ', not "' + input + '".');
         }
       } else if (currentQuestion.type === 'read') {
-        var answer = prompt('What is the weld size (in inches)?');
-        if (answer === null) return;
-        if (parseFloat(answer) === currentQuestion.spec.size) {
+        var expected = currentQuestion.spec.size;
+        var expectedStr = expected.toString();
+        if (input.trim() === expectedStr) {
           engine.recordCorrect();
-          showFeedback('correct', 'Correct! ' + currentQuestion.spec.size + ' inch fillet weld');
+          showFeedback('correct', 'Correct! ' + expected + " inch " + currentQuestion.spec.weldType.name.toLowerCase() + ' weld.');
         } else {
           engine.recordStrike();
-          showFeedback('wrong', 'Wrong. Correct answer: ' + currentQuestion.spec.size + ' inch fillet weld');
+          showFeedback('wrong', 'Incorrect. The weld size is ' + expected + " inches, not " + input + ".");
         }
       } else {
+        // Build mode - just show the completed symbol as feedback
+        var spec = currentQuestion.spec;
+        showFeedback('correct', 'Here is the completed symbol for: ' + spec.size + '" ' + spec.weldType.name.toLowerCase() + ' weld, ' +
+          (spec.side === 'arrow' ? 'arrow side' : 'far side'));
+        drawSymbol(spec);
         engine.recordCorrect();
-        showFeedback('correct', 'Build mode: advanced');
       }
-    });
+
+      setTimeout(newQuestion, 2500);
+    }
 
     function showFeedback(type, msg) {
-      var fb = panel.querySelector('.feedback');
-      if (fb) {
-        fb.className = 'feedback ' + type;
-        fb.textContent = msg;
-      } else {
-        var div = document.createElement('div');
-        div.className = 'feedback ' + type;
-        div.textContent = msg;
-        panel.querySelector('.game-area').insertAdjacentElement('beforebegin', div);
-      }
-      setTimeout(newQuestion, 2000);
+      var existing = panel.querySelector('.feedback');
+      if (existing) existing.remove();
+
+      var div = document.createElement('div');
+      div.className = 'feedback ' + type;
+      div.textContent = msg;
+      panel.querySelector('.game-area').insertAdjacentElement('beforebegin', div);
+
+      setTimeout(function() {
+        if (div.parentNode) div.parentNode.removeChild(div);
+      }, 2500);
     }
+
+    panel.querySelector('#weld-check').addEventListener('click', checkAnswer);
+    answerInput.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') checkAnswer();
+    });
+
+    panel.querySelector('#weld-skip').addEventListener('click', function() {
+      if (engine.isGameOver()) {
+        engine.reset();
+        newQuestion();
+        return;
+      }
+      engine.recordStrike();
+      var msg = '';
+      if (currentQuestion.type === 'identify') {
+        msg = 'Skipped. This is the ' + currentQuestion.part.name + '. ' + currentQuestion.part.desc;
+      } else if (currentQuestion.type === 'read') {
+        msg = 'Skipped. The size is ' + currentQuestion.spec.size + " inches.";
+      } else {
+        var spec = currentQuestion.spec;
+        msg = 'Skipped. This would be a ' + spec.size + '" ' + spec.weldType.name.toLowerCase() + 's ' + spec.size + '" weld on the ' + spec.side + ' side.';
+      }
+      showFeedback('wrong', msg);
+      setTimeout(newQuestion, 2500);
+    });
 
     panel.querySelector('#weld-settings').addEventListener('click', function() {
       var form = weldtrain.buildSettingsPanel(panel, settingsDef);
       form.querySelector('.apply-btn').addEventListener('click', function() {
         var newSettings = weldtrain.readSettingsFromForm(form);
-        for (var k in newSettings) { settings[k] = newSettings[k]; }
+        for (var k in newSettings) {
+          settings[k] = newSettings[k];
+        }
         weldtrain.saveSettings('weld', settings);
         form.parentElement.innerHTML = '';
         engine.reset();
@@ -251,10 +389,7 @@ var WeldGame = (function() {
     newQuestion();
   }
 
-  return {
-    init: init,
-    PARTS: PARTS
-  };
+  return { init: init, PARTS: PARTS };
 })();
 
 window.registerModule('weld', 'Welding Symbols', WeldGame.init);
