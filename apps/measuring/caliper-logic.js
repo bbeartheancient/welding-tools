@@ -52,11 +52,17 @@ var CaliperLogic = (function() {
         if (isNaN(val)) return null;
         return Math.round(val * 1000);
       }
-      var m = text.match(/^(\d+)?\s*([\d]+)\s*\/\s*([\d]+)?/);
+      // Whole inch: "2" or "2 in"
+      var wholeOnly = text.match(/^(\d+)\s*(?:in)?$/);
+      if (wholeOnly) {
+        return parseInt(wholeOnly[1], 10) * 64;
+      }
+      var m = text.match(/^(\d+)?\s*(\d+)\s*\/\s*(\d+)\s*(?:in)?$/);
       if (m) {
-        var whole = m[1] ? parseInt(m[1]) : 0;
-        var num = parseInt(m[2]);
-        var den = m[3] ? parseInt(m[3]) : 64;
+        var whole = m[1] ? parseInt(m[1], 10) : 0;
+        var num = parseInt(m[2], 10);
+        var den = parseInt(m[3], 10);
+        if (den === 0 || num >= den || num <= 0) return null;
         return whole * 64 + Math.round(num * 64 / den);
       }
       return null;
@@ -73,3 +79,14 @@ var CaliperLogic = (function() {
     parseAnswer: parseAnswer
   };
 })();
+
+// Export for Node (global) and browser (window)
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = CaliperLogic;
+}
+if (typeof global !== 'undefined' && typeof global.CaliperLogic === 'undefined') {
+  global.CaliperLogic = CaliperLogic;
+}
+if (typeof window !== 'undefined') {
+  window.CaliperLogic = CaliperLogic;
+}

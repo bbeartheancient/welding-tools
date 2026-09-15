@@ -82,9 +82,10 @@ var TapeLogic = (function () {
       var whole = parseInt(mixedMatch[1], 10);
       var num = parseInt(mixedMatch[2], 10);
       var den = parseInt(mixedMatch[3], 10);
-      if (den > 0 && num > 0 && num < den) {
+      if (den > 0 && num > 0 && num < den && prec % den === 0) {
         return whole * prec + num * (prec / den);
       }
+      if (den > 0 && num > 0 && num < den) return -1;
     }
 
     // Fraction: "3/16"
@@ -92,9 +93,10 @@ var TapeLogic = (function () {
     if (fracMatch) {
       var num2 = parseInt(fracMatch[1], 10);
       var den2 = parseInt(fracMatch[2], 10);
-      if (den2 > 0 && num2 < den2) {
+      if (den2 > 0 && num2 < den2 && prec % den2 === 0) {
         return num2 * (prec / den2);
       }
+      if (den2 > 0 && num2 < den2) return -1;
     }
 
     // Decimal or whole number
@@ -134,13 +136,28 @@ var TapeLogic = (function () {
     return ticks;
   }
 
+  function validateAnswer(input, targetTicks, precision) {
+    var settings = { questionPrecision: precision };
+    var parsed = parseAnswer(input, settings);
+    return parsed === targetTicks;
+  }
+
   return {
     generateTarget: generateTarget,
     formatTarget: formatTarget,
     parseAnswer: parseAnswer,
+    validateAnswer: validateAnswer,
     generateTicks: generateTicks
   };
 })();
 
-// For Node tests: expose as global
-global.TapeLogic = TapeLogic;
+// Export for Node (global) and browser (window)
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = TapeLogic;
+}
+if (typeof global !== 'undefined' && typeof global.TapeLogic === 'undefined') {
+  global.TapeLogic = TapeLogic;
+}
+if (typeof window !== 'undefined') {
+  window.TapeLogic = TapeLogic;
+}

@@ -89,8 +89,8 @@
 
     function updateDisplay() {
       if (engineEl) {
-        engineEl.querySelector('.score').textContent = score;
-        engineEl.querySelector('.level').textContent = level;
+        engineEl.querySelector('.score').textContent = String(score);
+        engineEl.querySelector('.level').textContent = String(level);
         var strikeEls = engineEl.querySelectorAll('.strike');
         for (var i = 0; i < 3; i++) {
           strikeEls[i].classList.toggle('active', i < strikes);

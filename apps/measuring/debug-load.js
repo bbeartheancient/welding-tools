@@ -3,14 +3,15 @@ const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
 
-// Read files
-const html = fs.readFileSync('index.html', 'utf8');
-const coreJs = fs.readFileSync('core.js', 'utf8');
-const tapeLogicJs = fs.readFileSync('tape-logic.js', 'utf8');
-const tapeJs = fs.readFileSync('tape.js', 'utf8');
-const caliperLogicJs = fs.readFileSync('caliper-logic.js', 'utf8');
-const caliperJs = fs.readFileSync('caliper.js', 'utf8');
-const weldJs = fs.readFileSync('weld.js', 'utf8');
+// Read files (resolve relative to this script, not cwd)
+const baseDir = __dirname;
+const html = fs.readFileSync(path.join(baseDir, 'index.html'), 'utf8');
+const coreJs = fs.readFileSync(path.join(baseDir, 'core.js'), 'utf8');
+const tapeLogicJs = fs.readFileSync(path.join(baseDir, 'tape-logic.js'), 'utf8');
+const tapeJs = fs.readFileSync(path.join(baseDir, 'tape.js'), 'utf8');
+const caliperLogicJs = fs.readFileSync(path.join(baseDir, 'caliper-logic.js'), 'utf8');
+const caliperJs = fs.readFileSync(path.join(baseDir, 'caliper.js'), 'utf8');
+const weldJs = fs.readFileSync(path.join(baseDir, 'weld.js'), 'utf8');
 
 // Minimal DOM shim
 const elements = [];
@@ -37,6 +38,9 @@ const doc = {
   createElement(tag) { return createMockElement(tag); },
   getElementById(id) { return elements.find(e => e.id === id) || null; },
   getElementsByTagName(tag) { return elements.filter(e => e.tagName === tag.toUpperCase()); },
+  querySelectorAll(sel) { return []; },
+  querySelector(sel) { return null; },
+  addEventListener() {},
   body: createMockElement('body'),
   readyState: 'complete',
 };
