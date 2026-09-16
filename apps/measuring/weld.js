@@ -8,7 +8,7 @@ var WeldGame = (function() {
     { id: 2, name: 'Leader', desc: 'Line from arrow to reference line' },
     { id: 3, name: 'Reference line', desc: 'Horizontal baseline for all symbols' },
     { id: 4, name: 'Weld type', desc: 'Symbol indicating weld type (e.g. triangle=fillet)' },
-    { id: 5, name: 'Shop/Field weld', desc: 'Flag at far end indicates field weld' },
+    { id: 5, name: 'Shop/Field weld', desc: 'Flag at the arrow/reference-line junction indicates field weld' },
     { id: 6, name: 'Weld size', desc: 'Fillet weld leg length, left of symbol' },
     { id: 7, name: 'Weld symbol', desc: 'The weld type graphic' },
     { id: 8, name: 'Contour', desc: 'Flush/convex/concave finish' },
@@ -21,10 +21,10 @@ var WeldGame = (function() {
 
   var WELD_TYPES = [
     { id: 'fillet', name: 'Fillet', symbol: 'triangle' },
-    { id: 'groove', name: 'Groove', symbol: 'vee' },
-    { id: 'plug', name: 'Plug', symbol: 'circle' },
+    { id: 'groove', name: 'V-groove', symbol: 'vee' },
+    { id: 'plug', name: 'Plug', symbol: 'rectangle' },
     { id: 'slot', name: 'Slot', symbol: 'rectangle' },
-    { id: 'seam', name: 'Seam', symbol: 'dots' }
+    { id: 'seam', name: 'Resistance seam', symbol: 'circle-with-parallel-lines' }
   ];
 
   var CANVAS_W = 900;
@@ -111,7 +111,7 @@ var WeldGame = (function() {
       var refY = 250;
       var arrowX = 100;
       var symbolX = 380;
-      var flagX = 700;
+      var flagX = arrowX;
       var tailX = 750;
 
       // Reference line (part 3)
@@ -124,7 +124,7 @@ var WeldGame = (function() {
       }
       ctx.beginPath();
       ctx.moveTo(arrowX, refY);
-      ctx.lineTo(tailX + 50, refY);
+      ctx.lineTo(tailX, refY);
       ctx.stroke();
 
       // Leader line (part 2)
@@ -158,22 +158,31 @@ var WeldGame = (function() {
       ctx.fillStyle = symbolColor;
       ctx.strokeStyle = symbolColor;
 
-      var triangleSize = 30;
-      if (spec.side === 'arrow') {
+      ctx.lineWidth = (highlightPart === 7 || highlightPart === 4) ? 4 : 2;
+      var sides = spec.side === 'both' ? [1, -1] : [spec.side === 'arrow' ? 1 : -1];
+      sides.forEach(function(side) {
+        var y = refY + side * 30;
         ctx.beginPath();
-        ctx.moveTo(symbolX, refY);
-        ctx.lineTo(symbolX, refY + triangleSize);
-        ctx.lineTo(symbolX + triangleSize, refY);
-        ctx.closePath();
-        ctx.fill();
-      } else {
-        ctx.beginPath();
-        ctx.moveTo(symbolX, refY);
-        ctx.lineTo(symbolX, refY - triangleSize);
-        ctx.lineTo(symbolX + triangleSize, refY);
-        ctx.closePath();
-        ctx.fill();
-      }
+        if (spec.weldType.id === 'fillet') {
+          ctx.moveTo(symbolX, refY);
+          ctx.lineTo(symbolX, y);
+          ctx.lineTo(symbolX + 30, refY);
+          ctx.closePath();
+        } else if (spec.weldType.id === 'groove') {
+          ctx.moveTo(symbolX, y);
+          ctx.lineTo(symbolX + 15, refY);
+          ctx.lineTo(symbolX + 30, y);
+        } else if (spec.weldType.id === 'plug' || spec.weldType.id === 'slot') {
+          ctx.rect(symbolX, refY, 40, side * 22);
+        } else if (spec.weldType.id === 'seam') {
+          ctx.arc(symbolX + 15, refY, 18, 0, Math.PI * 2);
+          ctx.moveTo(symbolX - 12, refY - 7);
+          ctx.lineTo(symbolX + 42, refY - 7);
+          ctx.moveTo(symbolX - 12, refY + 7);
+          ctx.lineTo(symbolX + 42, refY + 7);
+        }
+        ctx.stroke();
+      });
 
       // Weld size (part 6) - left of symbol
       if (highlightPart === 6) {
@@ -181,11 +190,7 @@ var WeldGame = (function() {
       } else {
         ctx.fillStyle = '#333';
       }
-      var sizeText = spec.size.toString();
-      if (spec.weldType.id !== 'fillet') {
-        sizeText = spec.size + ' ' + spec.weldType.id + '"';
-      }
-      ctx.fillText(sizeText, symbolX - 60, spec.side === 'arrow' ? refY + 35 : refY - 20);
+      ctx.fillText(String(spec.size), symbolX - 60, spec.side === 'arrow' ? refY + 35 : refY - 20);
 
       // Field weld flag (part 5)
       if (spec.field) {
@@ -198,30 +203,15 @@ var WeldGame = (function() {
         }
         ctx.beginPath();
         ctx.moveTo(flagX, refY);
-        ctx.lineTo(flagX, refY - 15);
-        ctx.lineTo(flagX + 12, refY);
-        ctx.lineTo(flagX, refY + 15);
-        ctx.closePath();
+        ctx.lineTo(flagX, refY - 55);
+        ctx.lineTo(flagX + 30, refY - 45);
+        ctx.lineTo(flagX, refY - 35);
         ctx.stroke();
       }
 
-      // Intermittent welds (part 11)
       if (spec.intermittent) {
-        if (highlightPart === 11) {
-          ctx.strokeStyle = '#e74c3c';
-          ctx.lineWidth = 4;
-        } else {
-          ctx.strokeStyle = '#333';
-          ctx.lineWidth = 3;
-        }
-        ctx.beginPath();
-        ctx.moveTo(arrowX + 50, refY);
-        ctx.lineTo(arrowX + 130, refY);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(arrowX + 150, refY);
-        ctx.lineTo(arrowX + 230, refY);
-        ctx.stroke();
+        ctx.fillStyle = highlightPart === 11 ? '#e74c3c' : '#333';
+        ctx.fillText('2-5', symbolX + 65, spec.side === 'arrow' ? refY + 35 : refY - 20);
       }
 
       // Tail (part 12)
@@ -231,12 +221,11 @@ var WeldGame = (function() {
         } else {
           ctx.strokeStyle = '#333';
         }
+        ctx.lineWidth = highlightPart === 12 ? 4 : 2;
         ctx.beginPath();
-        ctx.moveTo(tailX, refY);
-        ctx.lineTo(tailX + 50, refY);
-        ctx.lineTo(tailX + 50, refY + 25);
-        ctx.lineTo(tailX, refY + 25);
-        ctx.closePath();
+        ctx.moveTo(tailX + 40, refY - 25);
+        ctx.lineTo(tailX, refY);
+        ctx.lineTo(tailX + 40, refY + 25);
         ctx.stroke();
 
         // Process reference (part 13)
@@ -246,7 +235,7 @@ var WeldGame = (function() {
           ctx.fillStyle = '#333';
         }
         ctx.font = '14px Arial';
-        ctx.fillText(spec.processCode, tailX + 10, refY + 18);
+        ctx.fillText(spec.processCode, tailX + 45, refY + 5);
       }
     }
 

@@ -131,5 +131,70 @@ test('stepInTargetUnits matches resolution', () => {
   assert.strictEqual(CaliperLogic.stepInTargetUnits({ unit: 'cm', resolution: '0.01' }), 1);
 });
 
+const vm = require('vm');
+const renderSource = fs.readFileSync(path.join(__dirname, '..', 'caliper.js'), 'utf8');
+
+function renderCaliper(settings) {
+  const texts = [];
+  const events = {};
+  const feedback = [];
+  const ctx = new Proxy({}, {
+    get(target, key) {
+      if (key === 'fillText') return text => texts.push(text);
+      return target[key] || (() => {});
+    }
+  });
+  const nodes = {};
+  const panel = {
+    querySelector(selector) {
+      if (selector === '.feedback') return null;
+      if (!nodes[selector]) nodes[selector] = {
+        value: '', style: {}, width: 1000, height: 400,
+        getContext: () => ctx,
+        addEventListener: (name, fn) => { events[selector + ':' + name] = fn; },
+        insertAdjacentElement: (position, element) => feedback.push(element.textContent)
+      };
+      return nodes[selector];
+    }
+  };
+  const logic = Object.assign({}, CaliperLogic, { generateTarget: () => 64 });
+  const sandbox = {
+    window: { registerModule() {} }, CaliperLogic: logic,
+    document: { createElement: () => ({}) }, setTimeout() {},
+    weldtrain: {
+      loadSettings: () => settings,
+      createEngine: () => ({ bindEl() {}, isGameOver: () => false, recordCorrect() {}, recordStrike() {} })
+    }
+  };
+  vm.runInNewContext(renderSource, sandbox);
+  sandbox.CaliperGame.init(panel);
+  return { texts, events, nodes, feedback };
+}
+
+for (const resolution of ['0.001', '1/8', '1/16', '1/32', '1/64', '0.1', '0.01']) {
+  test('Type hides answer until Check or Skip: ' + resolution, () => {
+    const settings = { unit: ['0.1', '0.01'].includes(resolution) ? 'cm' : 'inch', resolution, mode: 'type' };
+    const answer = CaliperLogic.formatTarget(64, settings);
+    const view = renderCaliper(settings);
+    assert.ok(!view.texts.includes(answer));
+    assert.ok(!view.nodes['#caliper-question'].textContent.includes(answer));
+    view.events['#caliper-check:click']();
+    assert.strictEqual(view.feedback.length, 0);
+    view.nodes['#caliper-answer'].value = answer;
+    view.events['#caliper-check:click']();
+    assert.ok(view.feedback[0].includes('Correct! ' + answer));
+    const skipped = renderCaliper(settings);
+    skipped.events['#caliper-skip:click']();
+    assert.ok(skipped.feedback[0].includes(answer));
+  });
+}
+
+for (const mode of ['find', 'trainer']) {
+  test(mode + ' keeps the adjustable readout', () => {
+    const settings = { unit: 'inch', resolution: '0.001', mode };
+    assert.ok(renderCaliper(settings).texts.includes(CaliperLogic.formatTarget(0, settings)));
+  });
+}
+
 console.log('\nCaliper: ' + passed + ' passed, ' + failed + ' failed');
 process.exit(failed > 0 ? 1 : 0);

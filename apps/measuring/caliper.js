@@ -262,12 +262,12 @@ var CaliperGame = (function() {
       ctx.fillStyle = '#c00';
       ctx.fill();
 
-      // Display drawn value under the dial
       ctx.fillStyle = '#000';
       ctx.font = 'bold 14px sans-serif';
       ctx.textAlign = 'center';
-      var displayVal = CaliperLogic.formatTarget(targetInt, s);
-      ctx.fillText(displayVal, dialX, dialY + dialRadius + 22);
+      if (settings.mode !== 'type') {
+        ctx.fillText(CaliperLogic.formatTarget(targetInt, s), dialX, dialY + dialRadius + 22);
+      }
     }
 
     function checkAnswer() {
