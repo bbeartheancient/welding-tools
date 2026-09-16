@@ -65,7 +65,7 @@ var CaliperGame = (function() {
     engine.bindEl(panel.querySelector('.engine-hud'));
 
     var canvas = panel.querySelector('#caliper-canvas');
-    var ctx = canvas.get('2d');
+    var ctx = canvas.getContext('2d');
     var questionEl = panel.querySelector('#caliper-question');
     var answerInput = panel.querySelector('#caliper-answer');
     var answerArea = panel.querySelector('.answer-area');

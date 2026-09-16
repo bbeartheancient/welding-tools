@@ -75,7 +75,7 @@ var WeldGame = (function() {
     engine.bindEl(panel.querySelector('.engine-hud'));
 
     var canvas = panel.querySelector('#weld-canvas');
-    var ctx = canvas.get('2d');
+    var ctx = canvas.getContext('2d');
     var questionEl = panel.querySelector('#weld-question');
     var answerInput = panel.querySelector('#weld-answer');
     var currentQuestion = null;
