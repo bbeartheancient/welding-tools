@@ -40,3 +40,27 @@
   "governance_level": "standard",
   "cwd": "/home/bbear/WELDING"
 }
+{
+  "timestamp": "2026-09-16T15:46:42Z",
+  "event": "session_end",
+  "total_events": 1,
+  "threats_detected": 0
+}
+{
+  "timestamp": "2026-09-16T15:48:06Z",
+  "event": "session_start",
+  "governance_level": "standard",
+  "cwd": "/home/bbear/WELDING"
+}
+{
+  "timestamp": "2026-09-16T16:19:05Z",
+  "event": "prompt_scanned",
+  "governance_level": "standard",
+  "status": "clean"
+}
+{
+  "timestamp": "2026-09-16T16:28:50Z",
+  "event": "prompt_scanned",
+  "governance_level": "standard",
+  "status": "clean"
+}
