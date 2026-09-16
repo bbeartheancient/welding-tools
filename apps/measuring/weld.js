@@ -190,9 +190,11 @@ var WeldGame = (function() {
       // Field weld flag (part 5)
       if (spec.field) {
         if (highlightPart === 5) {
-          ctx.fillStyle = '#e74c3c';
+          ctx.strokeStyle = '#e74c3c';
+          ctx.lineWidth = 4;
         } else {
-          ctx.fillStyle = '#333';
+          ctx.strokeStyle = '#333';
+          ctx.lineWidth = 2;
         }
         ctx.beginPath();
         ctx.moveTo(flagX, refY);
@@ -253,8 +255,14 @@ var WeldGame = (function() {
       var mode = settings.quizMode;
 
       if (mode === 'identify') {
-        var part = PARTS[Math.floor(Math.random() * PARTS.length)];
+        var pool = PARTS.filter(function(p) {
+          return [1, 2, 3, 4, 5, 6, 7, 11, 12, 13].indexOf(p.id) !== -1;
+        });
+        var part = pool[Math.floor(Math.random() * pool.length)];
         var spec = randomSpec();
+        if (part.id === 5) spec.field = true;
+        if (part.id === 11) spec.intermittent = true;
+        if (part.id === 12 || part.id === 13) spec.tail = true;
         currentQuestion = { type: 'identify', part: part, spec: spec };
         questionEl.textContent = 'Identify part #' + part.id + ' (highlighted in red).';
         drawSymbol(spec, part.id);
@@ -380,9 +388,7 @@ var WeldGame = (function() {
           settings[k] = newSettings[k];
         }
         weldtrain.saveSettings('weld', settings);
-        form.parentElement.innerHTML = '';
-        engine.reset();
-        newQuestion();
+        weldtrain.restorePanel(panel, 'weld');
       });
     });
 

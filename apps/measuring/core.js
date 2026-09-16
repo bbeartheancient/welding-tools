@@ -118,6 +118,10 @@
   // ---- Settings panel builder ----
   function buildSettingsPanel(container, settingsDef) {
     // settingsDef: array of { key, label, type: 'select'|'radio', options: [...] }
+    // Snapshot the game UI BEFORE wiping — restorePanel() needs it to rebuild.
+    if (!container.dataset.panelHtml) {
+      container.dataset.panelHtml = container.innerHTML;
+    }
     container.innerHTML = '';
     var form = document.createElement('form');
     form.className = 'settings-form';
@@ -171,6 +175,19 @@
     return form;
   }
 
+  function restorePanel(container, moduleId) {
+    if (!container.dataset.panelHtml) return false;
+    var saved = container.dataset.panelHtml;
+    delete container.dataset.panelHtml;
+    container.innerHTML = saved;
+    var mod = modules[moduleId];
+    if (mod) {
+      activeModule = null;
+      initModule(moduleId);
+    }
+    return true;
+  }
+
   function readSettingsFromForm(form) {
     var settings = {};
     var selects = form.querySelectorAll('select[data-setting]');
@@ -213,6 +230,15 @@
     }
   }
 
+  // Re-run a module's init after its panel was rebuilt (e.g. settings applied)
+  function initModule(moduleId) {
+    if (currentTab !== moduleId) return;
+    var mod = modules[moduleId];
+    if (!mod) return;
+    var panel = document.getElementById('panel-' + moduleId);
+    activeModule = mod.init(panel);
+  }
+
   // ---- Initialization ----
   function init() {
     var tabButtons = document.querySelectorAll('#tabbar .tab');
@@ -232,6 +258,7 @@
     registerModule: window.registerModule,
     createEngine: createEngine,
     buildSettingsPanel: buildSettingsPanel,
+    restorePanel: restorePanel,
     readSettingsFromForm: readSettingsFromForm,
     loadSettings: loadSettings,
     saveSettings: saveSettings

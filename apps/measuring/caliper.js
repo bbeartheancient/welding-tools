@@ -72,6 +72,16 @@ var CaliperGame = (function() {
 
     var currentTarget = null;
     var currentSettings = null;
+    var userTarget = 0;
+
+    function maxTargetInt(s) {
+      if (s.unit === 'inch') return s.resolution === '0.001' ? 6000 : 384;
+      return s.resolution === '0.01' ? 15000 : 1500;
+    }
+
+    function maxDisplayUnits(s) {
+      return s.unit === 'inch' ? 6 : 150;
+    }
 
     function getSettings() {
       return { unit: settings.unit, resolution: settings.resolution };
@@ -80,39 +90,33 @@ var CaliperGame = (function() {
     function newQuestion() {
       currentSettings = getSettings();
       currentTarget = CaliperLogic.generateTarget(currentSettings);
+      userTarget = 0;
       answerInput.value = '';
 
       if (settings.mode === 'type') {
         questionEl.textContent = 'Read the measurement displayed on the caliper.';
         answerArea.style.display = '';
+        drawCaliper(currentTarget, currentSettings);
       } else if (settings.mode === 'find') {
         var targetStr = CaliperLogic.formatTarget(currentTarget, currentSettings);
-        questionEl.textContent = 'Set the caliper to: ' + targetStr;
+        questionEl.textContent = 'Set the caliper to: ' + targetStr + ' — click the beam, then Check.';
         answerArea.style.display = 'none';
+        drawCaliper(userTarget, currentSettings);
       } else {
         var targetStr = CaliperLogic.formatTarget(currentTarget, currentSettings);
-        questionEl.textContent = 'Trainer: The target is ' + targetStr + ' — adjust the caliper.';
+        questionEl.textContent = 'Trainer: The target is ' + targetStr + ' — click the beam to practice.';
         answerArea.style.display = 'none';
-      }
-
-      drawCaliper(0, currentSettings);
-    }
-
-    function getResolutionValue(resolution, unit) {
-      if (unit === 'inch') {
-        if (resolution === '0.001') return 0.001;
-        var parts = resolution.split('/');
-        return 1 / parseInt(parts[1], 10);
-      } else {
-        return parseFloat(resolution);
+        drawCaliper(userTarget, currentSettings);
       }
     }
 
-    function drawCaliper(userValue, s) {
-      var resValue = getResolutionValue(s.resolution, s.unit);
-      var maxTarget = s.unit === 'inch' ? 6 : 150;
+    function drawCaliper(targetInt, s) {
+      var maxUnits = maxDisplayUnits(s);
       var canvasMax = CANVAS_W - 100;
-      var scale = canvasMax / maxTarget;
+      var scale = canvasMax / maxUnits;
+      var valueUnits = CaliperLogic.targetToUnits(targetInt, s);
+      var jawX = 50 + valueUnits * scale;
+      jawX = Math.max(50, Math.min(50 + canvasMax, jawX));
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -136,7 +140,7 @@ var CaliperGame = (function() {
           ctx.strokeStyle = '#000';
           ctx.lineWidth = 2;
           ctx.stroke();
-          if (i > 0 && i < 6) {
+          if (i > 0 && i <= 6) {
             ctx.fillText(i + '"', x, 175);
           }
         }
@@ -168,7 +172,7 @@ var CaliperGame = (function() {
           ctx.strokeStyle = '#000';
           ctx.lineWidth = 2;
           ctx.stroke();
-          if (i > 0 && i < 15) {
+          if (i > 0 && i <= 15) {
             ctx.fillText(i + ' cm', x, 175);
           }
         }
@@ -185,14 +189,24 @@ var CaliperGame = (function() {
         }
       }
 
-      // Draw dial (lower scale) — simplified as slider
-      var dialY = 250;
-      var sliderX = 50 + (userValue * scale);
-      sliderX = Math.max(50, Math.min(CANVAS_W - 50, sliderX));
+      // Fixed jaw at zero + sliding jaw at the measured value
+      ctx.fillStyle = '#666';
+      ctx.fillRect(46, 90, 8, 80);
+      ctx.fillStyle = 'rgba(52, 152, 219, 0.25)';
+      if (jawX > 54) ctx.fillRect(54, 100, jawX - 54, 60);
+      ctx.fillStyle = '#c00';
+      ctx.fillRect(jawX - 3, 90, 6, 80);
+      ctx.beginPath();
+      ctx.moveTo(jawX, 170);
+      ctx.lineTo(jawX - 7, 184);
+      ctx.lineTo(jawX + 7, 184);
+      ctx.closePath();
+      ctx.fill();
 
-      // Dial face (circle)
-      var dialRadius = 60;
-      var dialX = sliderX;
+      // Draw dial (fixed position, lower scale)
+      var dialY = 280;
+      var dialX = 200;
+      var dialRadius = 90;
       ctx.fillStyle = '#f0f0f0';
       ctx.beginPath();
       ctx.arc(dialX, dialY, dialRadius, 0, Math.PI * 2);
@@ -201,11 +215,12 @@ var CaliperGame = (function() {
       ctx.lineWidth = 2;
       ctx.stroke();
 
-      // Dial markings (0-100)
+      // Dial markings (0-100; one revolution per 0.1 in, or per 1 mm in metric)
+      var revsPerUnit = s.unit === 'inch' ? 0.1 : 1;
       for (var i = 0; i < 100; i++) {
         var angle = (i / 100) * Math.PI * 2 - Math.PI / 2;
-        var markLen = (i % 10 === 0) ? 10 : 5;
-        var innerR = dialRadius - 5;
+        var markLen = (i % 10 === 0) ? 14 : 7;
+        var innerR = dialRadius - 4;
         var outerR = innerR - markLen;
         var x1 = dialX + innerR * Math.cos(angle);
         var y1 = dialY + innerR * Math.sin(angle);
@@ -217,15 +232,26 @@ var CaliperGame = (function() {
         ctx.strokeStyle = '#000';
         ctx.lineWidth = (i % 10 === 0) ? 2 : 1;
         ctx.stroke();
+        if (i % 10 === 0) {
+          var labelR = innerR - markLen - 10;
+          ctx.fillStyle = '#000';
+          ctx.font = '10px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(String(i), dialX + labelR * Math.cos(angle),
+                       dialY + labelR * Math.sin(angle));
+        }
       }
+      ctx.textBaseline = 'alphabetic';
 
-      // Dial needle pointing to target
-      var targetFraction = (currentTarget % Math.round(1/resValue)) * resValue;
-      var needleAngle = (targetFraction / 1) * Math.PI * 2 - Math.PI / 2;
+      // Needle: fraction of one revolution actually measured
+      var revs = valueUnits / revsPerUnit;
+      revs = revs - Math.floor(revs);
+      var needleAngle = revs * Math.PI * 2 - Math.PI / 2;
       ctx.beginPath();
-      ctx.moveTo(dialX, dialY);
-      ctx.lineTo(dialX + (dialRadius - 20) * Math.cos(needleAngle),
-                 dialY + (dialRadius - 20) * Math.sin(needleAngle));
+      ctx.moveTo(dialX - 15 * Math.cos(needleAngle), dialY - 15 * Math.sin(needleAngle));
+      ctx.lineTo(dialX + (dialRadius - 10) * Math.cos(needleAngle),
+                 dialY + (dialRadius - 10) * Math.sin(needleAngle));
       ctx.strokeStyle = '#c00';
       ctx.lineWidth = 3;
       ctx.stroke();
@@ -236,12 +262,12 @@ var CaliperGame = (function() {
       ctx.fillStyle = '#c00';
       ctx.fill();
 
-      // Display current value on dial
+      // Display drawn value under the dial
       ctx.fillStyle = '#000';
       ctx.font = 'bold 14px sans-serif';
       ctx.textAlign = 'center';
-      var displayVal = CaliperLogic.formatTarget(userValue, currentSettings);
-      ctx.fillText(displayVal, dialX, dialY + dialRadius + 30);
+      var displayVal = CaliperLogic.formatTarget(targetInt, s);
+      ctx.fillText(displayVal, dialX, dialY + dialRadius + 22);
     }
 
     function checkAnswer() {
@@ -251,11 +277,26 @@ var CaliperGame = (function() {
         return;
       }
 
-      if (settings.mode === 'find' || settings.mode === 'trainer') {
-        // For find/trainer, just show the answer
-        var correctStr = CaliperLogic.formatTarget(currentTarget, currentSettings);
-        showFeedback('correct', 'Target: ' + correctStr);
-        setTimer(newQuestion, 2000);
+      if (settings.mode === 'trainer') {
+        var yours = CaliperLogic.formatTarget(userTarget, currentSettings);
+        var goal = CaliperLogic.formatTarget(currentTarget, currentSettings);
+        showFeedback(userTarget === currentTarget ? 'correct' : 'wrong',
+          'Yours: ' + yours + ' — target: ' + goal + ' (practice, no score)');
+        return;
+      }
+
+      if (settings.mode === 'find') {
+        if (userTarget === currentTarget) {
+          engine.recordCorrect();
+          showFeedback('correct', 'Correct! ' + CaliperLogic.formatTarget(currentTarget, currentSettings));
+          setTimer(newQuestion, 1500);
+        } else {
+          engine.recordStrike();
+          var correctStr = CaliperLogic.formatTarget(currentTarget, currentSettings);
+          showFeedback('wrong', 'Not quite — yours reads ' +
+            CaliperLogic.formatTarget(userTarget, currentSettings) + '. Target: ' + correctStr);
+          setTimer(newQuestion, 2500);
+        }
         return;
       }
 
@@ -316,21 +357,25 @@ var CaliperGame = (function() {
           settings[k] = newSettings[k];
         }
         weldtrain.saveSettings('caliper', settings);
-        form.parentElement.innerHTML = '';
-        engine.reset();
-        newQuestion();
+        weldtrain.restorePanel(panel, 'caliper');
       });
     });
 
-    // Canvas interactions for find/trainer modes
+    // Canvas interactions for find/trainer modes: click maps to nearest step
     canvas.addEventListener('mousedown', function(e) {
       if (settings.mode !== 'find' && settings.mode !== 'trainer') return;
+      var s = getSettings();
       var rect = canvas.getBoundingClientRect();
-      var x = e.clientX - rect.left;
+      var pxPerUnit = rect.width / CANVAS_W;
+      var x = (e.clientX - rect.left) / pxPerUnit;
       var relX = Math.max(0, Math.min(CANVAS_W - 100, x - 50));
-      var scale = (CANVAS_W - 100) / (settings.unit === 'inch' ? 6 : 150);
-      var userValue = relX / scale;
-      drawCaliper(userValue, getSettings());
+      var scale = (CANVAS_W - 100) / maxDisplayUnits(s);
+      var guess = CaliperLogic.unitsToTarget(relX / scale, s);
+      var step = CaliperLogic.stepInTargetUnits(s);
+      guess = Math.round(guess / step) * step;
+      guess = Math.max(0, Math.min(maxTargetInt(s), guess));
+      userTarget = guess;
+      drawCaliper(userTarget, s);
     });
 
     newQuestion();

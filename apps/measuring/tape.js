@@ -230,8 +230,7 @@ var TapeGame = (function() {
         var newSettings = weldtrain.readSettingsFromForm(form);
         for (var k in newSettings) { settings[k] = newSettings[k]; }
         weldtrain.saveSettings('tape', settings);
-        form.parentNode.innerHTML = '';
-        currentQuestion = newQuestion();
+        weldtrain.restorePanel(panel, 'tape');
       });
     });
 
