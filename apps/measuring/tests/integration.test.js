@@ -25,6 +25,7 @@ let TapeLogic, CaliperLogic;
 try {
   TapeLogic = require('../tape-logic.js');
 } catch (e) {
+  failed++;
   results.push('FAIL: require tape-logic — ' + e.message);
 }
 try {
@@ -111,8 +112,11 @@ function makeBrowserSandbox() {
         registeredModules[id] = { id: id, title: title, initFn: initFn };
       }
     },
-    document: { readyState: 'complete' },
-    localstorage: {
+    document: {
+      readyState: 'complete',
+      querySelectorAll: function() { return []; }
+    },
+    localStorage: {
       getItem: function(k) { return null; },
       setItem: function(k, v) {},
       removeItem: function(k) {}
@@ -127,6 +131,7 @@ function loadBrowserModule(name) {
     vm.runInNewContext(code, sandbox);
     return true;
   } catch (e) {
+    failed++;
     results.push('FAIL: load ' + name + ' — ' + e.message);
     return false;
   }

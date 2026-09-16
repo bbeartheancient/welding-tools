@@ -8,8 +8,6 @@ Per-turn protocol: read this file → next unchecked step → minimal targeted r
 - S0/S1/S2/S3/S4/S5/S6/S7/S8/S9 done — FACTS.md complete; app shell (index.html, core.js, style.css) built; all three modules implemented (tape, caliper, weld) with 26 passing node tests; all JS files pass syntax checks. S9 added localStorage persistence, Spears Technologies copyright footer, README.md, and AGENTS.md entry.
 - Remaining: Final user checklist (manual browser verification across all modes/precisions).
 - Git: origin = github.com/bbeartheancient/welding-tools — one commit per turn so inter-turn diffs are reviewable.
-</parameter into PLAN.md: "S9 done"
-
 ## S0 Bootstrap [x]
 - src/: dial_caliper.orig.js (179470B), ruler.orig.js (154307B), dial-caliper.html, ruler.html
 - ref/: aws-weld-symbol.html (parabuild v6 manual), weld-symbol-chart.html (arccaptain), weld-symbol-parabuild-v81.html (bonus)
@@ -47,30 +45,30 @@ From ref/weld-symbol-chart.html (arccaptain): groove/fillet joint symbol list + 
 v1 scope (lock here): fillet-centric — identify (name a highlighted part), read (symbol → state spec: size/side/intermittent/shop-field), build (spec text → assemble from parts palette: symbol right of line, size left, flags, dashes). Groove symbols: identification only in v1.
 Gate: ## welding filled + scope locked.
 
-## S5 App shell [ ]
+## S5 App shell [x]
 - index.html: tab bar (Tape Measure | Dial Caliper | Welding Symbols); per-tab content (canvas + settings panel + results bar); plain classroom-readable style.css (big fonts, high contrast, print-friendly); no external assets.
 - core.js: shared engine — settings-panel builder; score/streak + Check/Next state machine (NO timer; no sound in v1).
 - Module contract: module exports {id,title,init(canvasHost,settingsHost,resultsHost,engine)}; core wires tab switching + registration.
 Gates: 3 tabs switch + placeholders render + engine UI updates (fake module). No browser on this host → node smoke tests of pure logic; user-side visual check at S9 (optionally serve via fabric for LAN/phone preview).
 
-## S6a Tape logic [ ]
+## S6a Tape logic [x]
 tape-logic.js (pure): settings {questionPrecision in {1,2,4,8,16,32,64}, markPrecision ≥ questionPrecision, length auto|1..12, notation fraction|decimal, fractionStyle reduced|unsimplified|both, mode find|type (default type)}; target generator (random k/prec within length per FACTS); answer normalization/acceptance (accepts "4 3/16" AND "4.1875" cross-acceptance; reduced/unsimplified rule per FACTS); Find-mode tolerance (from FACTS, value units); scoring hooks.
 tests/tape.test.js: ~10 pure asserts — acceptance matrix + tick generation per precision (ticks/inch = prec; height class of k/prec tick = f(k/prec) per FACTS hierarchy).
 Gate: node tests pass; zero DOM in logic.
 
-## S6b Tape rendering [ ]
+## S6b Tape rendering [x]
 tape.js (canvas): ruler strip (tick heights per FACTS hierarchy, whole-number labels); Type mode: steel block with right edge at target; Find mode: target text on top, student clicks ruler (green marker follows mouse), tolerance per FACTS; results bar: score/streak/Check; miss → red line at correct position + correct value; correct → cheer + next.
 Gate: renders; logic covered by S6a tests. Keep file ≤400 lines.
 
-## S7a Caliper logic [ ]
+## S7a Caliper logic [x]
 caliper-logic.js (pure): value model per FACTS (unit inch|cm; resolution 0.001in | 1/8..1/64 | metric equivalents; dial division mapping; value→(beam integer + dial position); fine-adjust step; per-resolution acceptance format; Find tolerance).
 Gate: node tests — value↔dial mapping round-trips for ALL resolutions + acceptance cases.
 
-## S7b Caliper rendering [ ]
+## S7b Caliper rendering [x]
 caliper.js (canvas): beam (top cm, bottom inch per FACTS), sliding jaw + dial face (draw divisions/pointer; drag + +/- buttons + mouse wheel); three modes: Find (target above; adjust until it reads target; Submit), Type (block between jaws; keypad/keyboard; acceptance per FACTS), Trainer (current value between +/- buttons). Settings panel: unit/resolution/mode.
 Gate: node tests pass. Keep file ≤400 lines.
 
-## S8 Welding module [ ]
+## S8 Welding module [x]
 weld.js: parameterized pure drawing functions from a spec object {type, size, side arrow|far|both, intermittent dash/space, field bool, contour, finish}: reference line, fillet triangle on the right side of the line, arrow + leader to a joint diagram (two plates), tail, size text left of the symbol, arrow-side below vs far-side above, intermittent dashes, shop/field flag, all-welds-around circle.
 Quiz modes: Read (generated symbol → student picks spec elements / enters size), Build (spec text → student toggles/places elements: side, size, dashes, flag; check), Identify (symbol with one part highlighted → name it, from the 13 parts).
 Gate: node tests — spec→symbol drawing-parameter generation is deterministic + acceptance logic. Keep file ≤400 lines (split draw helpers into weld-draw.js if needed).
